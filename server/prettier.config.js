@@ -6,8 +6,6 @@ const config = {
   printWidth: 120,
   tabWidth: 2,
   endOfLine: 'auto',
-  bracketSpacing: true,
-  jsxBracketSameLine: false,
-  jsxSingleQuote: true
+  bracketSpacing: true
 }
 export default config
