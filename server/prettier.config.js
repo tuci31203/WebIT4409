@@ -8,4 +8,5 @@ const config = {
   endOfLine: 'auto',
   bracketSpacing: true
 }
+
 export default config
