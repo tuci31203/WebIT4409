@@ -20,7 +20,9 @@ const configSchema = z.object({
   PORT: z.coerce.number().default(4000),
   MONGO_URI: z.string(),
   PROTOCOL: z.string(),
-  DOMAIN: z.string()
+  DOMAIN: z.string(),
+  PRODUCTION: z.enum(['true', 'false']).transform(value => value === 'true'),
+  PRODUCTION_URL: z.string()
 })
 
 const configServer = configSchema.safeParse(process.env)
@@ -31,5 +33,7 @@ if (!configServer.success) {
 }
 
 const envConfig = configServer.data
-export const API_URL = `${envConfig.PROTOCOL}://${envConfig.DOMAIN}:${envConfig.PORT}`
+export const API_URL = envConfig.PRODUCTION
+  ? envConfig.PRODUCTION_URL
+  : `${envConfig.PROTOCOL}://${envConfig.DOMAIN}:${envConfig.PORT}`
 export default envConfig
