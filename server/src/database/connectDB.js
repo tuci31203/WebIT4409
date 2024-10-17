@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import mongoose from 'mongoose'
 
-import envConfig from '../utils/config.js'
+import envConfig from '@/utils/config.js'
 
 const connectDB = async () => {
   try {
