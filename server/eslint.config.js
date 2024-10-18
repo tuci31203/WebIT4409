@@ -1,10 +1,10 @@
-import babelParser from '@babel/eslint-parser'
-import js from '@eslint/js'
-import prettier from 'eslint-plugin-prettier'
-import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort'
-import globals from 'globals'
+const babelParser = require('@babel/eslint-parser')
+const js = require('@eslint/js')
+const prettier = require('eslint-plugin-prettier')
+const eslintPluginSimpleImportSort = require('eslint-plugin-simple-import-sort')
+const globals = require('globals')
 
-const config = [
+module.exports = [
   { ignores: ['dist', 'node_modules'] },
   {
     files: ['**/*.js'],
@@ -26,5 +26,3 @@ const config = [
     }
   }
 ]
-
-export default config

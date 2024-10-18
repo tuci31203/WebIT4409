@@ -1,8 +1,8 @@
 import express, { json } from 'express'
 
-import connectDB from '@/database/connectDB.js'
-import authRoute from '@/routes/auth.route.js'
-import envConfig, { API_URL } from '@/utils/config.js'
+import connectDB from '@/database/connectDB'
+import authRoute from '@/routes/auth.route'
+import envConfig, { API_URL } from '@/utils/config'
 
 const app = express()
 
