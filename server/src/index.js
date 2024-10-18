@@ -6,13 +6,12 @@ import envConfig, { API_URL } from '@/utils/config'
 
 const app = express()
 
-app.use(json())
-
-// Routes
-app.use('/api/auth', authRoute)
-
 const startServer = async () => {
   try {
+    app.use(json())
+    // Routes
+    app.use('/api/auth', authRoute)
+
     await connectDB()
     await app.listen(envConfig.PORT)
     console.log(`Server is running on ${API_URL}`)
