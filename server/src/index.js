@@ -14,9 +14,8 @@ app.use('/api/auth', authRoute)
 const startServer = async () => {
   try {
     await connectDB()
-    await app.listen(envConfig.PORT, () => {
-      console.log(`Server is running on ${API_URL}`)
-    })
+    await app.listen(envConfig.PORT)
+    console.log(`Server is running on ${API_URL}`)
   } catch (error) {
     console.error(error)
     process.exit(1)
