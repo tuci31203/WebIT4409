@@ -2,7 +2,7 @@ import Logo from '@/components/icons/logo'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
+    <div className='flex h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
         <div
           className='absolute inset-0 bg-cover bg-center object-cover'
@@ -18,8 +18,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </blockquote>
         </div>
       </div>
-      <div className='lg:p-8'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
+      <div className='flex items-center justify-center lg:p-8'>
+        <div className='mx-auto flex w-[350px] flex-col justify-center space-y-6'>
           <div className='flex flex-col space-y-2'>
             <Logo className='mb-2 justify-center text-2xl' />
             {children}
