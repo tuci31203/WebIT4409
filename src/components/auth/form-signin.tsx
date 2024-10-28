@@ -1,9 +1,9 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronsRight } from 'lucide-react'
-import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 
+import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -54,12 +54,7 @@ export default function FormSignIn() {
             Continue
             <ChevronsRight />
           </Button>
-          <div className='text-center text-sm text-muted-foreground'>
-            <span>Don&apos;t have an account? </span>
-            <Link href='/signup' className='text-primary underline'>
-              Sign Up
-            </Link>
-          </div>
+          <OAuthButton desc="Don't have an account?" link='/signup' label='Sign Up' />
         </div>
       </form>
     </Form>

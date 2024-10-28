@@ -1,15 +1,12 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { ChevronsRight } from 'lucide-react'
-import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 
-import GoogleIcon from '@/components/icons/google'
+import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import MiddleSeparator from '@/components/ui/middle-separator'
 import { SignUpBody, SignUpBodyType } from '@/schema/auth.schema'
 
 export default function FormSignUp() {
@@ -85,23 +82,7 @@ export default function FormSignUp() {
             Continue
             <ChevronsRight />
           </Button>
-          <MiddleSeparator label='Or continue with' />
-          <div className='grid grid-cols-2 gap-3'>
-            <Button variant='outline' className='w-full'>
-              <GoogleIcon />
-              Google
-            </Button>
-            <Button variant='outline' className='w-full'>
-              <GitHubLogoIcon />
-              GitHub
-            </Button>
-          </div>
-          <div className='text-center text-sm text-muted-foreground'>
-            <span>Already have an account? </span>
-            <Link href='/signin' className='text-primary underline'>
-              Sign In
-            </Link>
-          </div>
+          <OAuthButton desc='Already have an account?' link='/signin' label='Sign In' />
         </div>
       </form>
     </Form>
