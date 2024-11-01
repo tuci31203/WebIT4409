@@ -3,7 +3,7 @@ import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 import ws from 'ws'
 
-import envConfig from '@/config'
+import envConfig from '@/config/env.config'
 
 const prismaClientSingleton = () => {
   neonConfig.webSocketConstructor = ws
