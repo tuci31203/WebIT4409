@@ -13,7 +13,7 @@ export default function FormSignUp() {
   const form = useForm({
     resolver: zodResolver(SignUpBody),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: ''
@@ -28,12 +28,12 @@ export default function FormSignUp() {
         <div className='grid gap-4'>
           <FormField
             control={form.control}
-            name='username'
+            name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder='Enter your username' />
+                  <Input {...field} placeholder='Enter your name' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
