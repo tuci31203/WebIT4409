@@ -1,12 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
-import {db} from "@/lib/db"
+import { db } from "@/lib/db"
 import { redirect } from "next/navigation";
 
 export const initialProfile = async () => {
     const user = await currentUser();
 
-    if(!user) {
-        redirect("/sign-in");
+    if (!user) {
+        return redirect("/sign-in");
         // return undefined;
     }
 
@@ -16,7 +16,7 @@ export const initialProfile = async () => {
         }
     });
 
-    if (profile){
+    if (profile) {
         return profile;
     }
 
