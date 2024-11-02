@@ -22,6 +22,18 @@ export const SignUpBody = z
 
 export type SignUpBodyType = z.infer<typeof SignUpBody>
 
+export const SignUpResponse = z.object({
+  status: z.number(),
+  message: z.string(),
+  data: z.object({
+    id: z.number(),
+    name: z.string(),
+    email: z.string()
+  })
+})
+
+export type SignUpResponseType = z.infer<typeof SignUpResponse>
+
 export const SignInBody = z.object({
   email: z.string().email({
     message: 'Invalid email address'
