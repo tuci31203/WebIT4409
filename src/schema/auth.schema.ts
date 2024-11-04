@@ -3,7 +3,7 @@ import z from 'zod'
 export const SignUpBody = z
   .object({
     name: z.string().min(1, {
-      message: 'Username must be at least 1 characters long'
+      message: 'Name is not be empty'
     }),
     email: z.string().email({
       message: 'Invalid email address'
