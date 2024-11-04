@@ -1,15 +1,22 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronsRight } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
+import { signInAction } from '@/actions/auth.actions'
 import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { SignInBody, SignInBodyType } from '@/schema/auth.schema'
+import { handleErrorApi } from '@/utils/errors'
 
 export default function FormSignIn() {
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
   const form = useForm({
     resolver: zodResolver(SignInBody),
     defaultValues: {
@@ -17,8 +24,20 @@ export default function FormSignIn() {
       password: ''
     }
   })
-  const onSubmit = (data: SignInBodyType) => {
-    console.log(data)
+  const onSubmit = async (data: SignInBodyType) => {
+    //Define a submit handler.
+    if (loading) return
+    setLoading(true)
+
+    try {
+      const result = await signInAction(data)
+      toast.success(result.payload.message)
+      router.push('/dashboard')
+    } catch (error) {
+      handleErrorApi({ error, setError: form.setError })
+    } finally {
+      setLoading(false)
+    }
   }
   return (
     <Form {...form}>
@@ -50,7 +69,7 @@ export default function FormSignIn() {
               </FormItem>
             )}
           />
-          <Button type='submit' className='mt-1 w-full'>
+          <Button type='submit' className='mt-1 w-full' disabled={loading}>
             Continue
             <ChevronsRight />
           </Button>

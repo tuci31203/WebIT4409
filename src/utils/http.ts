@@ -29,7 +29,7 @@ const request = async <Response>(
 
   const data = {
     status: response.status,
-    payload: payload
+    payload: payload as Response
   }
 
   if (!response.ok) {

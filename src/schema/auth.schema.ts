@@ -44,3 +44,7 @@ export const SignInBody = z.object({
 })
 
 export type SignInBodyType = z.infer<typeof SignInBody>
+
+export const SignInResponse = SignUpResponse
+
+export type SignInResponseType = z.infer<typeof SignInResponse>
