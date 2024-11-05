@@ -33,6 +33,7 @@ export default function FormSignIn() {
       const result = await signInAction(data)
       toast.success(result.payload.message)
       router.push('/dashboard')
+      router.refresh()
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {
@@ -40,42 +41,44 @@ export default function FormSignIn() {
     }
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='grid gap-4'>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder='Enter your email' />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type='password' placeholder='Enter your password' />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type='submit' className='mt-1 w-full' disabled={loading}>
-            Continue
-            <ChevronsRight />
-          </Button>
-          <OAuthButton desc="Don't have an account?" link='/signup' label='Sign Up' />
-        </div>
-      </form>
-    </Form>
+    <div className='grid gap-4'>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className='grid gap-4'>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='Enter your email' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type='password' placeholder='Enter your password' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type='submit' className='mt-1 w-full' disabled={loading}>
+              Continue
+              <ChevronsRight />
+            </Button>
+          </div>
+        </form>
+      </Form>
+      <OAuthButton desc="Don't have an account?" link='/signup' label='Sign Up' />
+    </div>
   )
 }
