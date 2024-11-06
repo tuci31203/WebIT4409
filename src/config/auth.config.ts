@@ -1,3 +1,4 @@
+import Credentials from '@auth/core/providers/credentials'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
 import type { NextAuthConfig } from 'next-auth'
@@ -13,6 +14,7 @@ export default {
     GitHub({
       clientId: envConfig.AUTH_GITHUB_ID,
       clientSecret: envConfig.AUTH_GITHUB_SECRET
-    })
+    }),
+    Credentials({})
   ]
 } satisfies NextAuthConfig

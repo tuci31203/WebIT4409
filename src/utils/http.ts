@@ -25,11 +25,11 @@ const request = async <Response>(
     body
   })
 
-  const payload = await response.json()
+  const payload: Response = await response.json()
 
   const data = {
     status: response.status,
-    payload: payload as Response
+    payload
   }
 
   if (!response.ok) {
