@@ -26,9 +26,10 @@ export const SignUpResponse = z.object({
   status: z.number(),
   message: z.string(),
   data: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
-    email: z.string()
+    email: z.string(),
+    image: z.string().nullable()
   })
 })
 
