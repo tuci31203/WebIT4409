@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { signUpAction } from '@/actions/auth.actions'
+import { signUpAction } from '@/actions/auth/signup.action'
 import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -34,6 +34,7 @@ export default function FormSignUp() {
     try {
       const result = await signUpAction(data)
       toast.success(result.payload.message)
+      form.reset()
       router.push('/signin')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })

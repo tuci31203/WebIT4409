@@ -1,18 +1,18 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { StatusCodes } from 'http-status-codes'
 import { ChevronsRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { signInAction } from '@/actions/auth.actions'
+import { signInAction } from '@/actions/auth/signin.action'
 import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { SignInBody, SignInBodyType } from '@/schema/auth.schema'
-import { handleErrorApi } from '@/utils/errors'
 
 export default function FormSignIn() {
   const [loading, setLoading] = useState(false)
@@ -31,11 +31,19 @@ export default function FormSignIn() {
 
     try {
       const result = await signInAction(data)
-      toast.success(result.payload.message)
-      router.push('/dashboard')
-      router.refresh()
-    } catch (error) {
-      handleErrorApi({ error, setError: form.setError })
+
+      if (result?.success) {
+        toast.success(result?.message)
+        form.reset()
+        router.push('/dashboard')
+        router.refresh()
+      } else {
+        switch (result?.statusCode) {
+          case StatusCodes.UNAUTHORIZED:
+            form.setError('email', { message: result?.message })
+            form.setError('password', { message: result?.message })
+        }
+      }
     } finally {
       setLoading(false)
     }
