@@ -14,8 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: '/error'
   },
   events: {
-    async linkAccount({ user, account }) {
-      console.log('linkAccount', account)
+    async linkAccount({ user }) {
       await prisma.user.update({
         where: { id: user.id },
         data: {
