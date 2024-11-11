@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { signInAction } from '@/actions/auth/signin.action'
+import { signInAction } from '@/actions/auth.action'
 import OAuthButton from '@/components/auth/OAuth-button'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -32,18 +32,22 @@ export default function FormSignIn() {
     try {
       const result = await signInAction(data)
 
-      if (result?.success) {
-        toast.success(result?.message)
-        form.reset()
-        router.push('/dashboard')
-        router.refresh()
-      } else {
+      if (!result?.success) {
         switch (result?.statusCode) {
           case StatusCodes.UNAUTHORIZED:
             form.setError('email', { message: result?.message })
             form.setError('password', { message: result?.message })
+            return
+          default:
+            toast.error(result?.message)
+            return
         }
       }
+
+      toast.success(result?.message)
+      form.reset()
+      router.push('/dashboard')
+      router.refresh()
     } finally {
       setLoading(false)
     }

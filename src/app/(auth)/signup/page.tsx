@@ -1,13 +1,18 @@
 import FormSignUp from '@/components/auth/form-signup'
+import Logo from '@/components/icons/logo'
+import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Page() {
   return (
     <>
-      <div className='space-y-1 pb-4 text-center'>
-        <h1 className='text-2xl font-semibold tracking-tight'>Create your account</h1>
-        <p className='text-sm text-muted-foreground'>Welcome! Please fill in the details to get started.</p>
-      </div>
-      <FormSignUp />
+      <CardHeader className='text-center'>
+        <Logo className='flex justify-center pb-4' />
+        <CardTitle>Create your account</CardTitle>
+        <CardDescription>Welcome! Please fill in the details to get started.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <FormSignUp />
+      </CardContent>
     </>
   )
 }
