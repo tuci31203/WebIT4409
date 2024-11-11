@@ -1,5 +1,5 @@
-import { currentProfile } from "../../../lib/current-profile";
-import prisma from "../../../lib/db";
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
 import { Message } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         }
         let messages: Message[] = [];
         if(cursor) {
-            messages = await prisma.message.findMany({
+            messages = await db.message.findMany({
                 take: MESSAGES_BATCH,
                 skip: 1,
                 cursor: {
@@ -41,7 +41,7 @@ export async function GET(req: Request) {
             });
         }
         else {
-            messages = await prisma.message.findMany({
+            messages = await db.message.findMany({
                 take: MESSAGES_BATCH,
                 where: {
                     channelId

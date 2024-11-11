@@ -1,5 +1,5 @@
-import { currentProfile } from "../../../lib/current-profile";
-import prisma from "../../../lib/db";
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
 import { MemberRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -22,7 +22,7 @@ export async function POST (
         if(name === "general") {
             return new NextResponse("Name cannot be 'general'", { status: 400 });
         }
-        const server = await prisma.server.update({
+        const server = await db.server.update({
             where: {
                 id: serverId,
                 members: {
