@@ -17,7 +17,7 @@ export default async function handler (
         const { messageId, serverId, channelId } = req.query;
         const { content } = req.body;
         if(!profile) {
-            return res.status(401).json({ error: "Unauthorized1" });
+            return res.status(401).json({ error: "Unauthorized" });
         }
         if(!serverId) {
             return res.status(400).json({ error: "Server ID missing" });
@@ -80,12 +80,12 @@ export default async function handler (
         const canModify = isMessageOwner || isAdmin || isModerator;
 
         if(!canModify) {
-            return res.status(401).json({ error: "Unauthorized2" }); 
+            return res.status(401).json({ error: "Unauthorized" }); 
         }
         
         if(req.method === "DELETE") {
             if(!isMessageOwner) {
-                return res.status(401).json({ error: "Unauthorized3" });
+                return res.status(401).json({ error: "Unauthorized" });
             }
             message = await db.message.update({
                 where: {
@@ -108,7 +108,7 @@ export default async function handler (
         }
         if(req.method === "PATCH") {
             if(!isMessageOwner) {
-                return res.status(401).json({ error: "Unauthorized4" });
+                return res.status(401).json({ error: "Unauthorized" });
             }
             message = await db.message.update({
                 where: {
