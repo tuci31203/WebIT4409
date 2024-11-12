@@ -12,7 +12,7 @@ export async function PATCH (
             return new NextResponse("Unauthorized", { status: 401 });
         }
         const { serverId } = await params;
-        const { name, imageUrl } = await req.json();
+        const { name, image } = await req.json();
         const server = await db.server.update({
             where: {
                 id: serverId,
@@ -20,7 +20,7 @@ export async function PATCH (
             },
             data: {
                 name,
-                imageUrl
+                image
             }
         });
 

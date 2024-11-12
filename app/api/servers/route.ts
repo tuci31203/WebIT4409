@@ -7,7 +7,7 @@ import { v4 as uuidv4} from "uuid"
 export async function POST(req: Request) {
     const profile = await currentProfile();
     try {
-        const { name, imageUrl } = await req.json()
+        const { name, image } = await req.json()
         if(!profile) {
             return new NextResponse("Unauthorized", {status: 401})
         }
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
             data: {
                 profileId: profile.id,
                 name, 
-                imageUrl,
+                image,
                 inviteCode: uuidv4(),
                 channels: {
                     create: [
