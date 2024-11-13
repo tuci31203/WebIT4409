@@ -2,6 +2,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusCodes } from 'http-status-codes'
 import { ChevronsRight } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -75,7 +76,15 @@ export default function FormSignIn() {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className='flex items-center justify-between'>
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      href='/forgot-password'
+                      className='transiton text-sm text-muted-foreground underline duration-300 ease-in-out hover:text-black'
+                    >
+                      Forgot your password?
+                    </Link>
+                  </div>
                   <FormControl>
                     <Input {...field} type='password' placeholder='Enter your password' />
                   </FormControl>
