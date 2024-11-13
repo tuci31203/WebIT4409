@@ -5,8 +5,9 @@ import { AuthError } from 'next-auth'
 import { PrismaErrorCode } from '@/constants/error-reference'
 import { signIn, signOut } from '@/lib/auth'
 import { sendVerificationEmail } from '@/lib/mail'
+import prisma from '@/lib/prisma'
 import { SignInBodyType, SignUpBodyType } from '@/schema/auth.schema'
-import { createVerificationToken } from '@/service/tokens.service'
+import { createVerificationToken, getVerificationTokenByToken } from '@/service/tokens.service'
 import { createUser, findUserByEmail } from '@/service/user.service'
 import { isPrismaClientKnownRequestError } from '@/utils/errors'
 
@@ -49,7 +50,10 @@ export const signInAction = async (data: SignInBodyType) => {
 
     const existingUser = await findUserByEmail(data.email)
     if (existingUser && !existingUser.emailVerified) {
-      await createVerificationToken(existingUser.email)
+      const verificationToken = await createVerificationToken(existingUser.email)
+      if (verificationToken) {
+        await sendVerificationEmail(verificationToken.email, verificationToken.token)
+      }
       return {
         success: true,
         message: 'Please verify your email address'
@@ -71,6 +75,14 @@ export const signInAction = async (data: SignInBodyType) => {
             message: 'You have signed up using a social account. Please sign in using the same method.',
             statusCode: StatusCodes.BAD_REQUEST
           }
+        case 'OAuthAccountNotLinked': {
+          return {
+            success: false,
+            message:
+              'You previously signed up using your email and password. Please log in using the same credentials.',
+            statusCode: StatusCodes.BAD_REQUEST
+          }
+        }
         default:
           return {
             success: false,
@@ -93,5 +105,56 @@ export const signOutAction = async () => {
     await signOut({ redirect: false })
   } catch (errors) {
     console.log(errors)
+  }
+}
+
+export const verifyEmailAction = async (token: string) => {
+  const existingToken = await getVerificationTokenByToken(token)
+
+  if (!existingToken) {
+    return {
+      success: false,
+      message: 'The access invalid token'
+    }
+  }
+
+  const hasExpired = new Date() > new Date(existingToken.expires)
+
+  if (hasExpired) {
+    return {
+      success: false,
+      message: 'Token has expired'
+    }
+  }
+
+  try {
+    await prisma.user.update({
+      where: {
+        email: existingToken.email
+      },
+      data: {
+        emailVerified: new Date(),
+        email: existingToken.email
+      }
+    })
+
+    await prisma.verificationToken.delete({
+      where: {
+        email_token: {
+          email: existingToken.email,
+          token
+        }
+      }
+    })
+
+    return {
+      success: true,
+      message: 'Email verified successfully'
+    }
+  } catch (errors) {
+    return {
+      success: false,
+      message: 'Oops! Something went wrong'
+    }
   }
 }

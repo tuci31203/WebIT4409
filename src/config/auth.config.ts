@@ -1,3 +1,4 @@
+import { CallbackRouteError } from '@auth/core/errors'
 import Credentials from '@auth/core/providers/credentials'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
@@ -20,17 +21,6 @@ export default {
     }),
     Credentials({
       authorize: async credentials => {
-        // const user = await http.post<SignInResponseType>(
-        //   'http://localhost:3000/api/auth/sign-in',
-        //   credentials as SignInBodyType
-        // )
-        //
-        // console.log(user)
-        //
-        // if (!user) return null
-        //
-        // return user.payload.data
-
         const validatedField = SignInBody.safeParse(credentials)
 
         if (validatedField.success) {
@@ -40,7 +30,11 @@ export default {
             where: { email }
           })
 
-          if (!user || !user.password) return null
+          if (!user) return null
+
+          if (!user.password) {
+            throw new CallbackRouteError()
+          }
 
           const isPasswordValid = await comparePassword(password, user.password)
 
@@ -52,6 +46,6 @@ export default {
 
         return null
       }
-    })
+    }) as any
   ]
 } satisfies NextAuthConfig

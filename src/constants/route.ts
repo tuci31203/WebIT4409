@@ -1,4 +1,4 @@
-export const privateRoutes = ['/dashboard']
+export const publicRoutes = ['/verify-email', '/error', '/forgot-password']
 
 export const authRoutes = ['/signin', '/signup']
 
