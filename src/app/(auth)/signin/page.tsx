@@ -7,7 +7,7 @@ export default function Page() {
     <>
       <CardHeader className='text-center'>
         <Logo className='flex justify-center pb-4' />
-        <CardTitle>Create your account</CardTitle>
+        <CardTitle>Let&apos;s get started</CardTitle>
         <CardDescription>Welcome back! Please sign into continue</CardDescription>
       </CardHeader>
       <CardContent>
