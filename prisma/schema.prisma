@@ -49,3 +49,11 @@ model VerificationToken {
 
   @@id([email, token])
 }
+
+model PasswordResetToken {
+  email   String
+  token   String
+  expires DateTime
+
+  @@id([email, token])
+}

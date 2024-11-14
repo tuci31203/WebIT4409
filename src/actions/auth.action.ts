@@ -4,11 +4,13 @@ import { AuthError } from 'next-auth'
 
 import { PrismaErrorCode } from '@/constants/error-reference'
 import { signIn, signOut } from '@/lib/auth'
-import { sendVerificationEmail } from '@/lib/mail'
+import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/mail'
 import prisma from '@/lib/prisma'
-import { SignInBodyType, SignUpBodyType } from '@/schema/auth.schema'
-import { createVerificationToken, getVerificationTokenByToken } from '@/service/tokens.service'
+import { createPasswordResetToken, createVerificationToken } from '@/lib/tokens'
+import { ForgotPasswordBodyType, ResetPasswordBodyType, SignInBodyType, SignUpBodyType } from '@/schema/auth.schema'
+import { getPasswordResetTokenByToken, getVerificationTokenByToken } from '@/service/tokens.service'
 import { createUser, findUserByEmail } from '@/service/user.service'
+import { comparePassword, hashPassword } from '@/utils/crypto'
 import { isPrismaClientKnownRequestError } from '@/utils/errors'
 
 export const signUpAction = async (data: SignUpBodyType) => {
@@ -127,10 +129,18 @@ export const verifyEmailAction = async (token: string) => {
     }
   }
 
+  const existingUser = await findUserByEmail(existingToken.email)
+  if (!existingUser) {
+    return {
+      success: false,
+      message: 'Email does not exist'
+    }
+  }
+
   try {
     await prisma.user.update({
       where: {
-        email: existingToken.email
+        id: existingUser.id
       },
       data: {
         emailVerified: new Date(),
@@ -154,7 +164,96 @@ export const verifyEmailAction = async (token: string) => {
   } catch (errors) {
     return {
       success: false,
-      message: 'Oops! Something went wrong'
+      message: 'Failed to update email verification in database'
+    }
+  }
+}
+
+export const forgotPasswordAction = async (data: ForgotPasswordBodyType) => {
+  const existingUser = await findUserByEmail(data.email)
+
+  if (!existingUser) {
+    return {
+      success: false,
+      message: 'Email not found'
+    }
+  }
+
+  const passwordResetToken = await createPasswordResetToken(data.email)
+  if (passwordResetToken) {
+    await sendPasswordResetEmail(passwordResetToken.email, passwordResetToken.token)
+  }
+
+  return {
+    success: true,
+    message: 'Password reset email sent. Check your inbox.'
+  }
+}
+
+export const resetPasswordAction = async (token: string, data: ResetPasswordBodyType) => {
+  const existingToken = await getPasswordResetTokenByToken(token)
+
+  if (!existingToken) {
+    return {
+      success: false,
+      message: 'The access invalid token'
+    }
+  }
+
+  const hasExpired = new Date() > new Date(existingToken.expires)
+  if (hasExpired) {
+    return {
+      success: false,
+      message: 'Token has expired'
+    }
+  }
+  const existingUser = await findUserByEmail(existingToken.email)
+  if (!existingUser) {
+    return {
+      success: false,
+      message: 'Email does not exist',
+      statusCode: StatusCodes.BAD_REQUEST
+    }
+  }
+  if (existingUser.password) {
+    const isCurrentPasswordSameAsNew = await comparePassword(data.password, existingUser.password)
+    if (isCurrentPasswordSameAsNew) {
+      return {
+        success: false,
+        message: 'The new password cannot be the same as the current password',
+        statusCode: StatusCodes.BAD_REQUEST
+      }
+    }
+  }
+  const hashedPassword = await hashPassword(data.password)
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: existingUser.id
+      },
+      data: {
+        password: hashedPassword
+      }
+    })
+
+    await prisma.passwordResetToken.delete({
+      where: {
+        email_token: {
+          email: existingToken.email,
+          token
+        }
+      }
+    })
+
+    return {
+      success: true,
+      message: 'Password reset successfully'
+    }
+  } catch (errors) {
+    return {
+      success: false,
+      message: 'Failed to update password in database'
     }
   }
 }

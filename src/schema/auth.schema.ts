@@ -49,3 +49,27 @@ export type SignInBodyType = z.infer<typeof SignInBody>
 export const SignInResponse = SignUpResponse
 
 export type SignInResponseType = z.infer<typeof SignInResponse>
+
+export const ForgotPasswordBody = z.object({
+  email: z.string().email({
+    message: 'Invalid email address'
+  })
+})
+
+export type ForgotPasswordBodyType = z.infer<typeof ForgotPasswordBody>
+
+export const ResetPasswordBody = z
+  .object({
+    password: z.string().min(6, {
+      message: 'Password must be at least 6 characters long'
+    }),
+    passwordConfirmation: z.string().min(6, {
+      message: 'Password must be at least 6 characters long'
+    })
+  })
+  .refine(data => data.password === data.passwordConfirmation, {
+    message: "Oops! Your passwords don't match. Please try again",
+    path: ['confirmPassword']
+  })
+
+export type ResetPasswordBodyType = z.infer<typeof ResetPasswordBody>
