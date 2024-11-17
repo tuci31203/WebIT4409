@@ -13,6 +13,7 @@ const ServerIdPage = async ({
   params
 }: ServerIdPageProps) => {
   const profile = await currentProfile();
+  const { serverId } = await params;
 
   if (!profile) {
     redirect('/sign-in'); // Redirects server-side to the sign-in page
@@ -22,7 +23,7 @@ const ServerIdPage = async ({
 
   const server = await db.server.findUnique({
     where: {
-      id: params.serverId,
+      id: serverId,
       members: {
         some: {
           profileId: profile.id,
@@ -47,7 +48,7 @@ const ServerIdPage = async ({
     return null;
   }
 
-  return redirect(`/servers/${params.serverId}/channels/${initialChannel?.id}`)
+  return redirect(`/servers/${serverId}/channels/${initialChannel?.id}`)
 }
 
 export default ServerIdPage
