@@ -3,8 +3,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
-import AuthProvider from '@/components/provider/auth-provider'
-import { ThemeProvider } from '@/components/provider/theme-provider'
+import AuthProvider from '@/components/providers/auth-provider'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({
