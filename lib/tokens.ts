@@ -3,7 +3,7 @@ import ms from 'ms'
 import { v4 } from 'uuid'
 
 import envConfig from '@/config/env.config'
-import prisma from '@/lib/prisma'
+import db from '@/lib/db'
 import { getPasswordResetTokenByEmail, getVerificationTokenByEmail } from '@/service/tokens.service'
 
 export const createVerificationToken = async (email: string) => {
@@ -14,7 +14,7 @@ export const createVerificationToken = async (email: string) => {
     const existingToken = await getVerificationTokenByEmail(email)
 
     if (existingToken) {
-      await prisma.verificationToken.delete({
+      await db.verificationToken.delete({
         where: {
           email_token: {
             email,
@@ -24,7 +24,7 @@ export const createVerificationToken = async (email: string) => {
       })
     }
 
-    return await prisma.verificationToken.create({
+    return await db.verificationToken.create({
       data: {
         email,
         token,
@@ -44,7 +44,7 @@ export const createPasswordResetToken = async (email: string) => {
     const existingToken = await getPasswordResetTokenByEmail(email)
 
     if (existingToken) {
-      await prisma.passwordResetToken.delete({
+      await db.passwordResetToken.delete({
         where: {
           email_token: {
             email,
@@ -54,7 +54,7 @@ export const createPasswordResetToken = async (email: string) => {
       })
     }
 
-    return await prisma.passwordResetToken.create({
+    return await db.passwordResetToken.create({
       data: {
         email,
         token,

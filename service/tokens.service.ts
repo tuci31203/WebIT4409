@@ -1,8 +1,8 @@
-import prisma from '@/lib/prisma'
+import db from '@/lib/db'
 
 export const getVerificationTokenByToken = async (token: string) => {
   try {
-    return await prisma.verificationToken.findFirst({
+    return await db.verificationToken.findFirst({
       where: { token }
     })
   } catch {
@@ -12,7 +12,7 @@ export const getVerificationTokenByToken = async (token: string) => {
 
 export const getVerificationTokenByEmail = async (email: string) => {
   try {
-    return await prisma.verificationToken.findFirst({
+    return await db.verificationToken.findFirst({
       where: { email }
     })
   } catch {
@@ -22,7 +22,7 @@ export const getVerificationTokenByEmail = async (email: string) => {
 
 export const getPasswordResetTokenByToken = async (token: string) => {
   try {
-    return await prisma.passwordResetToken.findFirst({
+    return await db.passwordResetToken.findFirst({
       where: { token }
     })
   } catch {
@@ -32,7 +32,7 @@ export const getPasswordResetTokenByToken = async (token: string) => {
 
 export const getPasswordResetTokenByEmail = async (email: string) => {
   try {
-    return await prisma.passwordResetToken.findFirst({
+    return await db.passwordResetToken.findFirst({
       where: { email }
     })
   } catch {

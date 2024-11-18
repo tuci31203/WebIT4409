@@ -5,7 +5,7 @@ import Google from '@auth/core/providers/google'
 import type { NextAuthConfig } from 'next-auth'
 
 import envConfig from '@/config/env.config'
-import prisma from '@/lib/prisma'
+import db from '@/lib/db'
 import { SignInBody, SignInResponseType } from '@/schema/auth.schema'
 import { comparePassword } from '@/utils/crypto'
 
@@ -26,7 +26,7 @@ export default {
         if (validatedField.success) {
           const { email, password } = validatedField.data
 
-          const user = await prisma.user.findUnique({
+          const user = await db.user.findUnique({
             where: { email }
           })
 

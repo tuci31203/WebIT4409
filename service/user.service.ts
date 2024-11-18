@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import db from '@/lib/db'
 import { hashPassword } from '@/utils/crypto'
 
 type User = {
@@ -11,7 +11,7 @@ export const createUser = async (data: User) => {
   const { email, password, name } = data
 
   const hashedPassword = await hashPassword(password)
-  return prisma.user.create({
+  return db.user.create({
     data: {
       name,
       email,
@@ -27,7 +27,7 @@ export const createUser = async (data: User) => {
 
 export const findUserByEmail = async (email: string) => {
   try {
-    return await prisma.user.findUnique({
+    return await db.user.findUnique({
       where: { email }
     })
   } catch {
@@ -37,7 +37,7 @@ export const findUserByEmail = async (email: string) => {
 
 export const findUserById = async (id: string | undefined) => {
   try {
-    return await prisma.user.findUnique({
+    return await db.user.findUnique({
       where: { id }
     })
   } catch {

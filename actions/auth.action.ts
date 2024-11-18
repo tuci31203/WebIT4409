@@ -4,8 +4,8 @@ import { AuthError } from 'next-auth'
 
 import { PrismaErrorCode } from '@/constants/error-reference'
 import { signIn, signOut } from '@/lib/auth'
+import db from '@/lib/db'
 import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/mail'
-import prisma from '@/lib/prisma'
 import { createPasswordResetToken, createVerificationToken } from '@/lib/tokens'
 import { ForgotPasswordBodyType, ResetPasswordBodyType, SignInBodyType, SignUpBodyType } from '@/schema/auth.schema'
 import { getPasswordResetTokenByToken, getVerificationTokenByToken } from '@/service/tokens.service'
@@ -138,7 +138,7 @@ export const verifyEmailAction = async (token: string) => {
   }
 
   try {
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: existingUser.id
       },
@@ -148,7 +148,7 @@ export const verifyEmailAction = async (token: string) => {
       }
     })
 
-    await prisma.verificationToken.delete({
+    await db.verificationToken.delete({
       where: {
         email_token: {
           email: existingToken.email,
@@ -228,7 +228,7 @@ export const resetPasswordAction = async (token: string, data: ResetPasswordBody
   const hashedPassword = await hashPassword(data.password)
 
   try {
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: existingUser.id
       },
@@ -237,7 +237,7 @@ export const resetPasswordAction = async (token: string, data: ResetPasswordBody
       }
     })
 
-    await prisma.passwordResetToken.delete({
+    await db.passwordResetToken.delete({
       where: {
         email_token: {
           email: existingToken.email,
