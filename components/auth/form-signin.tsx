@@ -3,8 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusCodes } from 'http-status-codes'
 import { ChevronsRight } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -18,6 +18,8 @@ import { SignInBody, SignInBodyType } from '@/schema/auth.schema'
 export default function FormSignIn() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const errorParam = searchParams.get('error')
   const form = useForm({
     resolver: zodResolver(SignInBody),
     defaultValues: {
@@ -25,6 +27,16 @@ export default function FormSignIn() {
       password: ''
     }
   })
+
+  useEffect(() => {
+    if (errorParam === 'OAuthAccountNotLinked') {
+      const errorOAuthMessage =
+        'You previously signed up using your email and password. Please log in using the same credentials.'
+      form.setError('email', { message: errorOAuthMessage })
+      form.setError('password', { message: errorOAuthMessage })
+    }
+  }, [errorParam, form])
+
   const onSubmit = async (data: SignInBodyType) => {
     //Define a submit handler.
     if (loading) return
