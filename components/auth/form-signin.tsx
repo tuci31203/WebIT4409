@@ -65,6 +65,7 @@ export default function FormSignIn() {
       setLoading(false)
     }
   }
+
   return (
     <div className='grid gap-4'>
       <Form {...form}>
@@ -77,7 +78,14 @@ export default function FormSignIn() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter your email' />
+                    <Input
+                      {...field}
+                      placeholder='Enter your email'
+                      onChange={event => {
+                        field.onChange(event)
+                        form.clearErrors('email')
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +106,15 @@ export default function FormSignIn() {
                     </Link>
                   </div>
                   <FormControl>
-                    <Input {...field} type='password' placeholder='Enter your password' />
+                    <Input
+                      {...field}
+                      type='password'
+                      placeholder='Enter your password'
+                      onChange={event => {
+                        field.onChange(event)
+                        form.clearErrors('password')
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
