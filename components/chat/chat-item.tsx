@@ -29,6 +29,7 @@ interface ChatItemProps {
     };
     timestamp: string;
     fileUrl: string | null;
+    fileType: string | null;
     deleted: boolean;
     currentMember: Member;
     isUpdated: boolean;
@@ -52,6 +53,7 @@ export const ChatIem = ({
     member,
     timestamp,
     fileUrl,
+    fileType,
     deleted,
     currentMember,
     isUpdated,
@@ -104,13 +106,14 @@ export const ChatIem = ({
         })
     }, [content]);
 
-    const fileType = fileUrl?.split(".").pop();
+
+    // const fileType = fileUrl ? isPDF();
     const isAdmin = currentMember.role === MemberRole.ADMIN;
     const isModerator = currentMember.role === MemberRole.MODERATOR;
     const isOwner = currentMember.id === member.id;
     const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
     const canEditMessage = !deleted && isOwner && !fileUrl;
-    const isPDF = fileType === "pdf" && fileUrl;
+    const isPDF = fileUrl && fileType === "pdf";
     const isImage = !isPDF && fileUrl;
 
     return (
