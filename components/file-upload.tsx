@@ -15,12 +15,12 @@ export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
   const [fileType, setFileType] = useState("image")
   const handleUploadComplete = (res: any) => {
     const uploadedFile = res?.[0];
-    console.log("Uploaded File Details:", {
-      url: uploadedFile.url,
-      fileName: uploadedFile.name,
-      fileSize: uploadedFile.size,
-      fileType: uploadedFile.type
-    });
+    // console.log("Uploaded File Details:", {
+    //   url: uploadedFile.url,
+    //   fileName: uploadedFile.name,
+    //   fileSize: uploadedFile.size,
+    //   fileType: uploadedFile.type
+    // });
     setFileType(uploadedFile.type.split("/")[1]);
     onChange(uploadedFile.url);
   };
