@@ -98,6 +98,7 @@ export default async function handle(
                 },
                 data: {
                     fileUrl: null,
+                    fileType: null,
                     content: "This massage has been deleted.",
                     deleted: true,
                 },
