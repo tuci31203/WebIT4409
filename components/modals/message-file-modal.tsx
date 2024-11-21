@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "../file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useState } from "react";
 
 const formSchema = z.object({
     fileUrl: z.string().min(1, {
@@ -32,6 +33,7 @@ const formSchema = z.object({
 });
 
 export const MessageFileModal = () => {
+    const [fileType, setFileType] = useState('');
     const { isOpen, onClose, type, data } = useModal();
     const router = useRouter();
 
@@ -46,7 +48,9 @@ export const MessageFileModal = () => {
     });
 
     const handleClose = () => {
+        setFileType('');
         form.reset();
+        router.refresh();
         onClose();
     }
 
@@ -61,6 +65,7 @@ export const MessageFileModal = () => {
             await axios.post(url, {
                 ...values,
                 content: values.fileUrl,
+                fileType
             });
             form.reset();
             router.refresh();
@@ -92,6 +97,7 @@ export const MessageFileModal = () => {
                                         <FormItem>
                                             <FormControl>
                                                 <FileUpload
+                                                    onFileTypeChange={setFileType}
                                                     endpoint="messageFile"
                                                     value={field.value}
                                                     onChange={field.onChange}
