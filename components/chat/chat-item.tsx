@@ -29,7 +29,6 @@ interface ChatItemProps {
     };
     timestamp: string;
     fileUrl: string | null;
-    fileType: string | null;
     deleted: boolean;
     currentMember: Member;
     isUpdated: boolean;
@@ -53,7 +52,6 @@ export const ChatIem = ({
     member,
     timestamp,
     fileUrl,
-    fileType,
     deleted,
     currentMember,
     isUpdated,
@@ -108,12 +106,17 @@ export const ChatIem = ({
 
 
     // const fileType = fileUrl ? isPDF();
+    let realUrl = fileUrl
+    let isPDF = false;
+    if (fileUrl?.startsWith("PDF")) {
+        isPDF = true;
+        realUrl = fileUrl.slice(3); // Remove the first 3 characters
+    }
     const isAdmin = currentMember.role === MemberRole.ADMIN;
     const isModerator = currentMember.role === MemberRole.MODERATOR;
     const isOwner = currentMember.id === member.id;
     const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
     const canEditMessage = !deleted && isOwner && !fileUrl;
-    const isPDF = fileUrl && fileType === "pdf";
     const isImage = !isPDF && fileUrl;
 
     return (
@@ -155,7 +158,7 @@ export const ChatIem = ({
                         <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10" >
                             <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
                             <a
-                                href={fileUrl}
+                                href={realUrl!}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"

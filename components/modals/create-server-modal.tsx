@@ -90,7 +90,6 @@ export const CreateServerModal = () => {
                     <FormItem>
                       <FormControl>
                         <FileUpload
-                          onFileTypeChange={() => { }}
                           endpoint="serverImage"
                           value={field.value}
                           onChange={field.onChange}
