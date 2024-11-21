@@ -1,76 +1,31 @@
-import React, { ReactNode, useState } from "react";
+"use client"
 
-// Interface for Popover
-interface PopoverProps {
-    children: ReactNode;
-}
+import * as React from "react"
+import * as PopoverPrimitive from "@radix-ui/react-popover"
 
-// Interface for PopoverTrigger
-interface PopoverTriggerProps {
-    children: ReactNode;
-    onClick?: () => void;
-}
+import { cn } from "@/lib/utils"
 
-// Interface for PopoverContent
-interface PopoverContentProps {
-    children: ReactNode;
-    className?: string;
-    side?: "top" | "bottom" | "left" | "right"; // Optional placement
-    sideOffset?: number; // Optional offset
-}
+const Popover = PopoverPrimitive.Root
 
-// Popover Component
-export const Popover = ({ children }: PopoverProps) => {
-    const [isOpen, setIsOpen] = useState(false);
+const PopoverTrigger = PopoverPrimitive.Trigger
 
-    return (
-        <div
-            className="relative"
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseLeave={() => setIsOpen(false)}
-        >
-            {children}
-        </div>
-    );
-};
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+))
+PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-// PopoverTrigger Component
-export const PopoverTrigger = ({ children, onClick }: PopoverTriggerProps) => {
-    return (
-        <button
-            className="popover-trigger"
-            onClick={onClick}
-        >
-            {children}
-        </button>
-    );
-};
-
-// PopoverContent Component
-export const PopoverContent = ({
-    children,
-    className = "",
-    side = "bottom",
-    sideOffset = 0,
-}: PopoverContentProps) => {
-    // Determine placement based on 'side' and 'sideOffset'
-    const getPlacementStyles = () => {
-        const styles: React.CSSProperties = {
-            position: "absolute",
-        };
-        if (side === "top") styles.bottom = `calc(100% + ${sideOffset}px)`;
-        if (side === "bottom") styles.top = `calc(100% + ${sideOffset}px)`;
-        if (side === "left") styles.right = `calc(100% + ${sideOffset}px)`;
-        if (side === "right") styles.left = `calc(100% + ${sideOffset}px)`;
-        return styles;
-    };
-
-    return (
-        <div
-            className={`popover-content bg-white shadow-md border p-2 rounded ${className}`}
-            style={getPlacementStyles()}
-        >
-            {children}
-        </div>
-    );
-};
+export { Popover, PopoverTrigger, PopoverContent }
