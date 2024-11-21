@@ -7,12 +7,11 @@ import { useState } from "react";
 
 interface IFileUpload {
   onChange: (url?: string) => void;
-  onFileTypeChange: (fileType: string) => void;
   value: string;
   endpoint: "serverImage" | "messageFile";
 }
 
-export const FileUpload = ({ onChange, onFileTypeChange, value, endpoint }: IFileUpload) => {
+export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
   const [fileType, setFileType] = useState("image")
   const handleUploadComplete = (res: any) => {
     const uploadedFile = res?.[0];
@@ -22,9 +21,12 @@ export const FileUpload = ({ onChange, onFileTypeChange, value, endpoint }: IFil
     //   fileSize: uploadedFile.size,
     //   fileType: uploadedFile.type
     // });
-    onFileTypeChange(uploadedFile.type.split("/").pop())
+    let url = uploadedFile.url;
     setFileType(uploadedFile.type.split("/").pop());
-    onChange(uploadedFile.url);
+    if (uploadedFile.type.split("/").pop() === "pdf") {
+      url = "PDF" + uploadedFile.url;
+    }
+    onChange(url);
   };
 
   if (value && fileType !== "pdf") {
@@ -47,12 +49,12 @@ export const FileUpload = ({ onChange, onFileTypeChange, value, endpoint }: IFil
       <div className="relative flex items-center p-2 mt-2 rounded-md bg-zinc-100 break-all" >
         <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
         <a
-          href={value}
+          href={value.slice(3)}
           target="_blank"
           rel="noopener noreferrer"
           className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
         >
-          {value}
+          {value.slice(3)}
         </a>
         <button
           onClick={() => onChange("")}
