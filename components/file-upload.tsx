@@ -7,11 +7,12 @@ import { useState } from "react";
 
 interface IFileUpload {
   onChange: (url?: string) => void;
+  onFileTypeChange: (fileType: string) => void;
   value: string;
   endpoint: "serverImage" | "messageFile";
 }
 
-export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
+export const FileUpload = ({ onChange, onFileTypeChange, value, endpoint }: IFileUpload) => {
   const [fileType, setFileType] = useState("image")
   const handleUploadComplete = (res: any) => {
     const uploadedFile = res?.[0];
@@ -21,7 +22,8 @@ export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
     //   fileSize: uploadedFile.size,
     //   fileType: uploadedFile.type
     // });
-    setFileType(uploadedFile.type.split("/")[1]);
+    onFileTypeChange(uploadedFile.type.split("/").pop())
+    setFileType(uploadedFile.type.split("/").pop());
     onChange(uploadedFile.url);
   };
 
