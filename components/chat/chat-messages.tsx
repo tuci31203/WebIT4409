@@ -7,6 +7,7 @@ import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
 import { ChatIem } from "./chat-item";
 import { format } from "date-fns";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 
 type MessageWithMemberWithProfile = Message & {
@@ -41,6 +42,8 @@ export const ChatMessages = ({
     type,
 }: ChatMessagesProps) => {
     const queryKey = `chat:${chatId}`;
+    const addKey = `chat:${chatId}:messages`;
+    const updateKey = `chat:${chatId}:messages:update`;
 
     const {
         data,
@@ -54,6 +57,7 @@ export const ChatMessages = ({
         paramKey,
         paramValue,
     });
+    useChatSocket({ queryKey, addKey, updateKey });
 
     if (status === "pending") {
         return (
