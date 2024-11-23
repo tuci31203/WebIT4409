@@ -59,7 +59,7 @@ export default function FormSignIn() {
 
       toast.success(result?.message)
       form.reset()
-      router.push('/dashboard')
+      router.push('/')
       router.refresh()
     } finally {
       setLoading(false)
