@@ -19,7 +19,7 @@ export default function FormSignIn() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const errorParam = searchParams.get('error')
+  const errorParam = searchParams?.get('error')
   const form = useForm({
     resolver: zodResolver(SignInBody),
     defaultValues: {

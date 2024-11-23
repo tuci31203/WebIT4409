@@ -1,9 +1,5 @@
 const MemberIdPage = () => {
-    return (
-        <div>
-            Member ID Page!
-        </div>
-    )
+  return <div>Member ID Page!</div>
 }
 
-export default MemberIdPage; 
+export default MemberIdPage

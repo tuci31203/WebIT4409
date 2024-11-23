@@ -1,29 +1,20 @@
-import { Hash, Menu } from "lucide-react";
-import { MobileToggle } from "@/components/mobile-toggle";
+import { Hash, Menu } from 'lucide-react'
+
+import { MobileToggle } from '@/components/mobile-toggle'
 
 interface ChatHeaderProps {
-    serverId: string;
-    name: string;
-    type: "channel" | "conversation";
-    image?: string;
+  serverId: string
+  name: string
+  type: 'channel' | 'conversation'
+  image?: string
 }
 
-export const ChatHeader = ({
-    serverId,
-    name,
-    type,
-    image
-}: ChatHeaderProps) => {
-
-    return (
-        <div className="text-md font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2">
-            <MobileToggle serverId={serverId} />
-            {type === "channel" && (
-                <Hash className="w-5 h-5 text-zinc-500 dark:text-zinc-400 mr-2" />
-            )}
-            <p className="font-semibold text-md text-black dark:text-white">
-                {name}
-            </p>
-        </div>
-    )
+export const ChatHeader = ({ serverId, name, type, image }: ChatHeaderProps) => {
+  return (
+    <div className='text-md flex h-12 items-center border-b-2 border-neutral-200 px-3 font-semibold dark:border-neutral-800'>
+      <MobileToggle serverId={serverId} />
+      {type === 'channel' && <Hash className='mr-2 h-5 w-5 text-zinc-500 dark:text-zinc-400' />}
+      <p className='text-md font-semibold text-black dark:text-white'>{name}</p>
+    </div>
+  )
 }

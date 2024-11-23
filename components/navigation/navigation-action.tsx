@@ -1,32 +1,23 @@
-"use client"
+'use client'
 
-import { Plus } from "lucide-react"
-import { ActionTooltip } from "../action-tooltip"
-import { useModal } from "@/hooks/use-modal-store"
+import { Plus } from 'lucide-react'
+
+import { useModal } from '@/hooks/use-modal-store'
+
+import { ActionTooltip } from '../action-tooltip'
 
 export const NavigationAction = () => {
-    const { onOpen } = useModal()
+  const { onOpen } = useModal()
 
-
-    return (
-        <div>
-            <ActionTooltip
-                side="right"
-                align="center"
-                label="Add a server"
-            >
-                <button
-                    onClick={() => onOpen("createServer")}
-                    className="group flex items-center"
-                >
-                    <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-indigo-500">
-                        <Plus
-                            className="group-hover:text-white transition dark:text-indigo-200 text-indigo-500"
-                            size={25}
-                        />
-                    </div>
-                </button>
-            </ActionTooltip>
-        </div>
-    )
+  return (
+    <div>
+      <ActionTooltip side='right' align='center' label='Add a server'>
+        <button onClick={() => onOpen('createServer')} className='group flex items-center'>
+          <div className='mx-3 flex h-[48px] w-[48px] items-center justify-center overflow-hidden rounded-[24px] bg-background transition-all group-hover:rounded-[16px] group-hover:bg-indigo-500 dark:bg-neutral-700'>
+            <Plus className='text-indigo-500 transition group-hover:text-white dark:text-indigo-200' size={25} />
+          </div>
+        </button>
+      </ActionTooltip>
+    </div>
+  )
 }

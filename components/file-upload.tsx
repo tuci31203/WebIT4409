@@ -1,43 +1,44 @@
-"use client";
+'use client'
 
-import { UploadDropzone } from "@/lib/uploadthing";
-import { X } from "lucide-react";
-import Image from "next/image";
+import { X } from 'lucide-react'
+import Image from 'next/image'
+
+import { UploadDropzone } from '@/lib/uploadthing'
 
 interface IFileUpload {
-  onChange: (url?: string) => void;
-  value: string;
-  endpoint: "serverImage" | "messageFile";
+  onChange: (url?: string) => void
+  value: string
+  endpoint: 'serverImage' | 'messageFile'
 }
 
 export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
-  const fileType = value?.split(".").pop();
+  const fileType = value?.split('.').pop()
 
-  if (value && fileType !== "pdf") {
+  if (value && fileType !== 'pdf') {
     return (
-      <div className="relative h-20 w-20">
-        <Image fill src={value} alt="Upload" className="rounded-full" />
+      <div className='relative h-20 w-20'>
+        <Image fill src={value} alt='Upload' className='rounded-full' />
         <button
-          onClick={() => onChange("")}
-          className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
-          type="button"
+          onClick={() => onChange('')}
+          className='absolute right-0 top-0 rounded-full bg-rose-500 p-1 text-white shadow-sm'
+          type='button'
         >
-          <X className="h-4 w-4" />
+          <X className='h-4 w-4' />
         </button>
       </div>
-    );
+    )
   }
 
   return (
     <UploadDropzone
       endpoint={endpoint}
-      onClientUploadComplete={(res) => {
-        onChange(res?.[0].url);
+      onClientUploadComplete={res => {
+        onChange(res?.[0].url)
         // console.log(res)
       }}
       onUploadError={(e: Error) => {
-        console.log(e);
+        console.log(e)
       }}
     />
-  );
-};
+  )
+}

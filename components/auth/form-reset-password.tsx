@@ -16,7 +16,7 @@ export default function FormResetPassword() {
   const [loading, setLoading] = useState<boolean>(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const token = searchParams.get('token')
+  const token = searchParams?.get('token')
 
   const form = useForm({
     resolver: zodResolver(ResetPasswordBody),
