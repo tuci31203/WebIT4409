@@ -58,7 +58,7 @@ export async function PATCH(req: Request, { params }: { params: { channelId: str
     const user = await currentProfile()
 
     const { channelId } = await params
-    if (!user) {
+    if (!user?.id) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
