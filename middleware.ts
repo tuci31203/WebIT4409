@@ -1,6 +1,12 @@
 import NextAuth from 'next-auth'
 
-import { apiAuthPrefix, authRoutes, DEFAULT_SIGN_IN_REDIRECT, publicRoutes } from '@/constants/route'
+import {
+  apiAuthPrefix,
+  apiUploadthingPrefix,
+  authRoutes,
+  DEFAULT_SIGN_IN_REDIRECT,
+  publicRoutes
+} from '@/constants/route'
 
 import authConfig from './config/auth.config'
 
@@ -11,10 +17,11 @@ export default auth(req => {
   const isSignedIn = !!req.auth
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isApiUploadthingRoute = nextUrl.pathname.startsWith(apiUploadthingPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
-  if (isApiAuthRoute) {
+  if (isApiAuthRoute || isApiUploadthingRoute) {
     return
   }
 

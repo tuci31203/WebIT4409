@@ -4,4 +4,6 @@ export const authRoutes = ['/signin', '/signup', '/verify-email', '/error', '/fo
 
 export const apiAuthPrefix = '/api/auth'
 
+export const apiUploadthingPrefix = '/api/uploadthing'
+
 export const DEFAULT_SIGN_IN_REDIRECT = '/'
