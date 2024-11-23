@@ -39,7 +39,7 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
       members: {
         create: [
           {
-            userId: user?.id
+            userId: user?.id as string
           }
         ]
       }

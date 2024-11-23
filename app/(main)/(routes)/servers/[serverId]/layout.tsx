@@ -6,7 +6,7 @@ import db from '@/lib/db'
 
 const ServerIdLayout = async ({ children, params }: { children: React.ReactNode; params: { serverId: string } }) => {
   const user = await currentProfile()
-  const { serverId } = params
+  const { serverId } = await params
   if (!user) {
     return redirect('/sign-in')
   }

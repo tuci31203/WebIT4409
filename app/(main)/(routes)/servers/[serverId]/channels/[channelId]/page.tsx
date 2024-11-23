@@ -13,7 +13,7 @@ interface ChannelIdPageProps {
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   const user = await currentProfile()
-  const { serverId, channelId } = params
+  const { serverId, channelId } = await params
 
   const channel = await db.channel.findUnique({
     where: {
