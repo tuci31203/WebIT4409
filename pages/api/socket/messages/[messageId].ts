@@ -133,7 +133,7 @@ export default async function handle(
             })
         }
 
-        const updateKey = `chat:${channelId}:message:update`;
+        const updateKey = `chat:${channelId}:messages:update`;
 
         res?.socket?.server?.io?.emit(updateKey, message);
 

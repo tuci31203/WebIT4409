@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         pathname: "**",
       },
     ],
-    domains: ["uploadthing.com"],
+    // domains: ["uploadthing.com"],
   },
 };
 

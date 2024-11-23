@@ -8,12 +8,12 @@ import {
 } from "react";
 import { io as ClientIO } from "socket.io-client";
 
-type SockerContextType = {
+type SocketContextType = {
     socket: any | null;
     isConnected: boolean;
 };
 
-const SockerContext = createContext<SockerContextType>({
+const SockerContext = createContext<SocketContextType>({
     socket: null,
     isConnected: false,
 });
