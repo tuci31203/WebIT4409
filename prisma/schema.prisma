@@ -9,18 +9,17 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-model Profile{
+model Profile {
   id String @id @default(uuid())
-  userId String @unique 
-  name String
+  userId String @unique
+  name String 
   image String @db.Text
   email String @db.Text
-
   servers Server[]
   members Member[]
   channels Channel[]
@@ -29,34 +28,32 @@ model Profile{
   updatedAt DateTime @updatedAt
 }
 
-model Server{
+model Server {
   id String @id @default(uuid())
   name String
   image String @db.Text
   inviteCode String @unique
-
-  profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
   members Member[]
   channels Channel[]
 
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   @@index([profileId])
 }
 
-enum MemberRole{
+enum MemberRole {
   ADMIN
   MODERATOR
   GUEST
 }
 
-model Member{
+model Member {
   id String @id @default(uuid())
   role MemberRole @default(GUEST)
-  
+
   profileId String
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
@@ -77,13 +74,13 @@ model Member{
   @@index([serverId])
 }
 
-enum ChannelType{
+enum ChannelType {
   TEXT
   AUDIO
   VIDEO
 }
 
-model Channel{
+model Channel {
   id String @id @default(uuid())
   name String
   type ChannelType @default(TEXT)
@@ -98,7 +95,6 @@ model Channel{
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
   
   @@index([profileId])
   @@index([serverId])
@@ -158,7 +154,6 @@ model DirectMessage{
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   deleted Boolean @default(false)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
