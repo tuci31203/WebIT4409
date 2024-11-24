@@ -1,8 +1,9 @@
 "use client";
 
 import { UploadDropzone } from "@/lib/uploadthing";
-import { X } from "lucide-react";
+import { FileIcon, X } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 interface IFileUpload {
   onChange: (url?: string) => void;
@@ -11,7 +12,22 @@ interface IFileUpload {
 }
 
 export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
-  const fileType = value?.split(".").pop();
+  const [fileType, setFileType] = useState("image")
+  const handleUploadComplete = (res: any) => {
+    const uploadedFile = res?.[0];
+    // console.log("Uploaded File Details:", {
+    //   url: uploadedFile.url,
+    //   fileName: uploadedFile.name,
+    //   fileSize: uploadedFile.size,
+    //   fileType: uploadedFile.type
+    // });
+    let url = uploadedFile.url;
+    setFileType(uploadedFile.type.split("/").pop());
+    if (uploadedFile.type.split("/").pop() === "pdf") {
+      url = "PDF" + uploadedFile.url;
+    }
+    onChange(url);
+  };
 
   if (value && fileType !== "pdf") {
     return (
@@ -28,16 +44,41 @@ export const FileUpload = ({ onChange, value, endpoint }: IFileUpload) => {
     );
   }
 
+  if (value && fileType === "pdf") {
+    return (
+      <div className="relative flex items-center p-2 mt-2 rounded-md bg-zinc-100 break-all" >
+        <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+        <a
+          href={value.slice(3)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+        >
+          {value.slice(3)}
+        </a>
+        <button
+          onClick={() => onChange("")}
+          className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm"
+          type="button"
+        ><X className="h-4 w-4" /></button>
+      </div>
+    )
+  }
+
   return (
     <UploadDropzone
       endpoint={endpoint}
-      onClientUploadComplete={(res) => {
-        onChange(res?.[0].url);
-        // console.log(res)
-      }}
+      onClientUploadComplete={handleUploadComplete}
       onUploadError={(e: Error) => {
         console.log(e);
       }}
+    // onClientUploadComplete={(res) => {
+    //   onChange(res?.[0].url);
+    //   // console.log(res)
+    // }}
+    // onUploadError={(e: Error) => {
+    //   console.log(e);
+    // }}
     />
   );
 };
