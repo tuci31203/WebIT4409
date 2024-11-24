@@ -3,6 +3,7 @@ import { z } from 'zod'
 const envSchema = z.object({
   AUTH_TRUST_HOST: z.string(),
   NODE_ENV: z.string(),
+  NEXT_PUBLIC_BASE_URL: z.string(),
   DATABASE_URL: z.string(),
   AUTH_SECRET: z.string(),
   AUTH_GOOGLE_ID: z.string(),
@@ -16,6 +17,7 @@ const envSchema = z.object({
 const config = envSchema.safeParse({
   AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
   NODE_ENV: process.env.NODE_ENV,
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   DATABASE_URL: process.env.DATABASE_URL,
   AUTH_SECRET: process.env.AUTH_SECRET,
   AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
@@ -33,4 +35,13 @@ if (!config.success) {
 
 const envConfig = config.data
 
+export const BASE_URL = envConfig.NODE_ENV === 'production' ? envConfig.NEXT_PUBLIC_BASE_URL : envConfig.AUTH_TRUST_HOST
+
 export default envConfig
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface ProcessEnv extends z.infer<typeof envSchema> {}
+  }
+}

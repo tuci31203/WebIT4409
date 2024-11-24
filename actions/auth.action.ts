@@ -104,7 +104,7 @@ export const signInAction = async (data: SignInBodyType) => {
 
 export const signOutAction = async () => {
   try {
-    await signOut({ redirect: false })
+    await signOut({ redirect: false, redirectTo: '/signin' })
   } catch (errors) {
     console.log(errors)
   }

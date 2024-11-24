@@ -1,12 +1,12 @@
 import { Resend } from 'resend'
 
-import envConfig from '@/config/env.config'
+import envConfig, { BASE_URL } from '@/config/env.config'
 import { findUserByEmail } from '@/service/user.service'
 
 const resend = new Resend(envConfig.RESEND_EMAIL_API_KEY)
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const confirmationURL = `${envConfig.AUTH_TRUST_HOST}/verify-email?token=${token}`
+  const confirmationURL = `${BASE_URL}/verify-email?token=${token}`
 
   await resend.emails.send({
     from: 'onboarding@resend.dev',
@@ -65,7 +65,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
   const user = await findUserByEmail(email)
-  const resetPasswordURL = `${envConfig.AUTH_TRUST_HOST}/reset-password?token=${token}`
+  const resetPasswordURL = `${BASE_URL}/reset-password?token=${token}`
 
   await resend.emails.send({
     from: 'onboarding@resend.dev',

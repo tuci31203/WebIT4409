@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 
 import { InitialModal } from '@/components/modals/initial-modal'
-import { ModeToggle } from '@/components/mode-toggle'
 import { currentProfile } from '@/lib/current-profile'
 import db from '@/lib/db'
 
@@ -24,7 +23,6 @@ export default async function Home() {
 
   return (
     <div className='flex justify-between'>
-      {!user && <ModeToggle />}
       <InitialModal />
     </div>
   )
