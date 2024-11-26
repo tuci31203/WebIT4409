@@ -37,8 +37,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
-    async jwt({ token }) {
+    async jwt({ token, session, trigger }) {
       if (!token.sub) return token
+
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name
+        await db.user.update({
+          where: { id: token.sub },
+          data: {
+            name: token.name
+          }
+        })
+      }
 
       return token
     }
