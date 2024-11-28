@@ -2,7 +2,7 @@
 
 import { Connection, ConnectionStatus } from "@prisma/client"
 import { Button } from "../ui/button";
-import { UserRoundCheck } from "lucide-react";
+import { UserRoundCheck, UserRoundPlus, UserRoundX, X } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
@@ -75,13 +75,15 @@ export const ChatConnection = ({
                         disabled={isLoading}
                         variant="friend"
                         size='connection'
+                        className="focus-visible:outline-none"
                     >
                         <UserRoundCheck className="w-4 h-4" />
                         Friends
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={onUnrequest}>
+                <DropdownMenuContent align="start" alignOffset={8}>
+                    <DropdownMenuItem onClick={onUnrequest} className="text-sm px-1 py-1">
+                        <UserRoundX className="w-4 h-4" />
                         Unfriend
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -90,23 +92,15 @@ export const ChatConnection = ({
     }
     if(status === "requesting") {
         return (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button 
-                        disabled={isLoading}
-                        variant="not_friend"
-                        size='connection'
-                    >
-                        <UserRoundCheck className="w-4 h-4" />
-                        Request sent
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={onUnrequest}>
-                        Cancel request
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Button 
+                disabled={isLoading}
+                variant="not_friend"
+                size='connection'
+                onClick={onUnrequest}
+            >
+                <UserRoundX className="w-4 h-4" />
+                Cancel request
+            </Button>
         )
     }
     if(status === "requested") {
@@ -117,16 +111,19 @@ export const ChatConnection = ({
                         disabled={isLoading}
                         variant="not_friend"
                         size='connection'
+                        className="focus-visible:outline-none"
                     >
                         <UserRoundCheck className="w-4 h-4" />
                         Respond
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={onAccept}>
+                <DropdownMenuContent align="start" alignOffset={8}>
+                    <DropdownMenuItem onClick={onAccept} className="text-sm px-1 py-1">
+                        <UserRoundCheck className="w-4 h-4" />
                         Accept
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={onUnrequest}>
+                    <DropdownMenuItem onClick={onUnrequest} className="text-sm px-1 py-1">
+                        <X className="w-4 h-4" />
                         Decline
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -141,7 +138,7 @@ export const ChatConnection = ({
             size='connection'
             onClick={onAddFriend}
         >
-            <UserRoundCheck className="w-4 h-4" />
+            <UserRoundPlus className="w-4 h-4" />
             Add friend
         </Button>
     )
