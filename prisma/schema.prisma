@@ -11,7 +11,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Profile{
@@ -24,6 +23,12 @@ model Profile{
   servers Server[]
   members Member[]
   channels Channel[]
+  conversationsInitiated Conversation[] @relation("ProfileOne")
+  conversationsReceived Conversation[] @relation("ProfileTwo")
+  connectionsInitiated Connection[] @relation("ProfileOne")
+  connectionsReceived Connection[] @relation("ProfileTwo")
+  directMessages DirectMessage[]
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,10 +70,6 @@ model Member{
 
   messages Message[]
 
-  directMessages DirectMessage[]
-
-  conversationsInitiated Conversation[] @relation("MemberOne")
-  conversationsReceived Conversation[] @relation("MemberTwo")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -130,20 +131,20 @@ model Message{
 model Conversation{
   id String @id @default(uuid())
   
-  memberOneId String
-  memberOne Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+  profileOneId String
+  profileOne Profile @relation("ProfileOne", fields: [profileOneId], references: [id], onDelete: Cascade)
 
-  memberTwoId String
-  memberTwo Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+  profileTwoId String
+  profileTwo Profile @relation("ProfileTwo", fields: [profileTwoId], references: [id], onDelete: Cascade)
 
   directMessages DirectMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  @@index([memberTwoId])
+  @@index([profileTwoId])
 
-  @@unique([memberOneId, memberTwoId])
+  @@unique([profileOneId, profileTwoId])
 }
 
 model DirectMessage{
@@ -151,8 +152,8 @@ model DirectMessage{
   content String? @db.Text
   fileUrl String? @db.Text
 
-  memberId String
-  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   conversationId String
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -162,6 +163,22 @@ model DirectMessage{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([memberId])
+  @@index([profileId])
   @@index([conversationId])
+}
+
+enum ConnectionStatus{
+  REQUESTING
+  FRIEND
+}
+
+model Connection{
+  id String @id @default(uuid())
+  profileOneId String
+  profileOne Profile @relation("ProfileOne", fields: [profileOneId], references: [id], onDelete: Cascade)
+
+  profileTwoId String
+  profileTwo Profile @relation("ProfileTwo", fields: [profileTwoId], references: [id], onDelete: Cascade)
+
+  status ConnectionStatus
 }
