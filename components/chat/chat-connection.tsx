@@ -44,7 +44,7 @@ export const ChatConnection = ({
     const onUnrequest = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.delete(`/api/connections/${connection?.id}`);
+            const res = await axios.delete(`/api/connections/${connectionId}`);
             setConnectionId(res.data?.id);
             setStatus("")
         } catch (err) {
@@ -57,7 +57,7 @@ export const ChatConnection = ({
     const onAccept = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.patch(`/api/connections/${connection?.id}`);
+            const res = await axios.patch(`/api/connections/${connectionId}`);
             setConnectionId(res.data?.id);
             setStatus("friends")
         } catch (err) {
