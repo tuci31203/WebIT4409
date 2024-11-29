@@ -35,14 +35,28 @@ export const SignUpResponse = z.object({
 
 export type SignUpResponseType = z.infer<typeof SignUpResponse>
 
-export const SignInBody = z.object({
-  email: z.string().email({
-    message: 'Invalid email address'
-  }),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters long'
+export const SignInBody = z
+  .object({
+    email: z.string().email({
+      message: 'Invalid email address'
+    }),
+    password: z.string().min(6, {
+      message: 'Password must be at least 6 characters long'
+    }),
+    codeOTP: z.optional(z.string())
   })
-})
+  .refine(
+    data => {
+      if (data.codeOTP) {
+        return data.codeOTP.length === 6
+      }
+      return true
+    },
+    {
+      message: 'OTP must be 6 digits',
+      path: ['codeOTP']
+    }
+  )
 
 export type SignInBodyType = z.infer<typeof SignInBody>
 

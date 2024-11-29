@@ -14,7 +14,7 @@ export default function Page() {
   const [status, setStatus] = useState<boolean>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const searchParams = useSearchParams()
-  const token = searchParams.get('token')
+  const token = searchParams?.get('token')
 
   const onSubmit = useCallback(async () => {
     if (!token) {

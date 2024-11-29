@@ -10,3 +10,7 @@ declare module 'next-auth' {
     user: ExtendUser
   }
 }
+
+declare module 'next-auth/react' {
+  function getCsrfToken(): Promise<string>
+}

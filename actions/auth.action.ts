@@ -5,10 +5,12 @@ import { AuthError } from 'next-auth'
 import { PrismaErrorCode } from '@/constants/error-reference'
 import { signIn, signOut } from '@/lib/auth'
 import db from '@/lib/db'
-import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/mail'
+import { sendPasswordResetEmail, sendTwoFactorEmail, sendVerificationEmail } from '@/lib/mail'
 import { createPasswordResetToken, createVerificationToken } from '@/lib/tokens'
+import { generateTwoFactorToken } from '@/lib/two-factor'
 import { ForgotPasswordBodyType, ResetPasswordBodyType, SignInBodyType, SignUpBodyType } from '@/schema/auth.schema'
 import { getPasswordResetTokenByToken, getVerificationTokenByToken } from '@/service/tokens.service'
+import { getTwoFactorConfirmationByUserId, getTwoFactorTokenByEmail } from '@/service/two-factor.service'
 import { createUser, findUserByEmail } from '@/service/user.service'
 import { comparePassword, hashPassword } from '@/utils/crypto'
 import { isPrismaClientKnownRequestError } from '@/utils/errors'
@@ -44,23 +46,86 @@ export const signUpAction = async (data: SignUpBodyType) => {
 }
 
 export const signInAction = async (data: SignInBodyType) => {
+  const existingUser = await findUserByEmail(data.email)
+
+  if (existingUser && !existingUser.emailVerified) {
+    const verificationToken = await createVerificationToken(existingUser.email)
+    if (verificationToken) {
+      await sendVerificationEmail(verificationToken.email, verificationToken.token)
+    }
+    return {
+      success: true,
+      message: 'Please verify your email address'
+    }
+  }
+
+  if (existingUser && existingUser.isTwoFactorEnabled && existingUser.email) {
+    if (data.codeOTP) {
+      const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email)
+      if (!twoFactorToken) {
+        return {
+          success: false,
+          message: 'Two-factor authentication token not found'
+        }
+      }
+
+      if (twoFactorToken.token !== data.codeOTP) {
+        return {
+          success: false,
+          message: 'Invalid two-factor authentication token'
+        }
+      }
+
+      const hasExpired = new Date() > new Date(twoFactorToken.expires)
+
+      if (hasExpired) {
+        return {
+          success: false,
+          message: 'Two-factor authentication token has expired'
+        }
+      }
+
+      await db.twoFactorToken.delete({
+        where: {
+          email_token: {
+            email: existingUser.email,
+            token: twoFactorToken.token
+          }
+        }
+      })
+
+      const existingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)
+
+      if (existingConfirmation) {
+        await db.twoFactorConfirmation.delete({
+          where: {
+            id: existingConfirmation.id
+          }
+        })
+      }
+
+      await db.twoFactorConfirmation.create({
+        data: {
+          userId: existingUser.id
+        }
+      })
+    } else {
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email)
+      await sendTwoFactorEmail(twoFactorToken.email, twoFactorToken.token)
+      return {
+        success: true,
+        showTwoFactorAuth: true,
+        message: 'Two-factor authentication code sent to your email'
+      }
+    }
+  }
+
   try {
     await signIn('credentials', {
       ...data,
       redirect: false
     })
 
-    const existingUser = await findUserByEmail(data.email)
-    if (existingUser && !existingUser.emailVerified) {
-      const verificationToken = await createVerificationToken(existingUser.email)
-      if (verificationToken) {
-        await sendVerificationEmail(verificationToken.email, verificationToken.token)
-      }
-      return {
-        success: true,
-        message: 'Please verify your email address'
-      }
-    }
     return { success: true, message: 'You have successfully logged into your account.' }
   } catch (errors) {
     if (errors instanceof AuthError) {
@@ -254,6 +319,32 @@ export const resetPasswordAction = async (token: string, data: ResetPasswordBody
     return {
       success: false,
       message: 'Failed to update password in database'
+    }
+  }
+}
+
+export const resendOTPAction = async (email: string) => {
+  const existingUser = await findUserByEmail(email)
+
+  if (!existingUser) {
+    return {
+      success: false,
+      message: 'Email not found'
+    }
+  }
+  try {
+    if (existingUser.isTwoFactorEnabled) {
+      const twoFactorToken = await generateTwoFactorToken(email)
+      await sendTwoFactorEmail(twoFactorToken.email, twoFactorToken.token)
+      return {
+        success: true,
+        message: 'New OTP has been sent to your email'
+      }
+    }
+  } catch (errors) {
+    return {
+      success: false,
+      message: 'Failed to resend OTP'
     }
   }
 }

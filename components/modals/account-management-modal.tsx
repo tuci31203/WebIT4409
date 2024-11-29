@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import UserProfile from '@/components/user/user-profile'
 import UserSecurity from '@/components/user/user-security'
@@ -47,12 +48,14 @@ export default function AccountManagementModal() {
               Security
             </TabsTrigger>
           </TabsList>
-          <TabsContent value='profile' className='w-full px-10 py-3 text-sm text-black'>
-            <UserProfile />
-          </TabsContent>
-          <TabsContent value='security' className='w-full px-10 py-3 text-black'>
-            <UserSecurity />
-          </TabsContent>
+          <ScrollArea className='h-[490px] w-full'>
+            <TabsContent value='profile' className='w-full px-10 py-3 text-sm text-black'>
+              <UserProfile />
+            </TabsContent>
+            <TabsContent value='security' className='w-full px-10 py-3 text-black'>
+              <UserSecurity />
+            </TabsContent>
+          </ScrollArea>
         </Tabs>
       </DialogContent>
     </Dialog>

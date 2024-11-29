@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  accounts      Account[]
-  servers       Server[]
-  members       Member[]
-  channels      Channel[]
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String                 @unique
+  emailVerified         DateTime?
+  image                 String?
+  password              String?
+  accounts              Account[]
+  isTwoFactorEnabled    Boolean                @default(false)
+  TwoFactorConfirmation TwoFactorConfirmation?
+  servers               Server[]
+  members               Member[]
+  channels              Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,6 +58,22 @@ model PasswordResetToken {
   expires DateTime
 
   @@id([email, token])
+}
+
+model TwoFactorToken {
+  email   String
+  token   String
+  expires DateTime
+
+  @@id([email, token])
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
 }
 
 model Server {

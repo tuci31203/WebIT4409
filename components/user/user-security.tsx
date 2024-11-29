@@ -3,33 +3,42 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import FormChangePassword from '@/components/auth/form-change-password'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
+import useCurrentUser from '@/hooks/use-current-user'
 import { TwoFactorAuthSchema, TwoFactorAuthSchemaType } from '@/schema/user.schema'
 
 export default function UserSecurity() {
+  const { data, update } = useCurrentUser()
   const [isUpdate, setIsUpdate] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const form = useForm({
     resolver: zodResolver(TwoFactorAuthSchema),
     defaultValues: {
-      twoFactorAuth: false
+      twoFactorAuth: data?.user?.isTwoFactorEnabled as boolean
     }
   })
+  console.log(data?.user)
 
   const onSubmit = async (data: TwoFactorAuthSchemaType) => {
     if (isLoading) return
     setIsLoading(true)
 
     try {
+      await update({ isTwoFactorEnabled: data.twoFactorAuth })
+      toast.success('Two factor authentication updated successfully')
+      router.refresh()
     } catch (errors) {
       console.log(errors)
+      toast.error('Failed to update two factor authentication')
     } finally {
       setIsLoading(false)
     }
@@ -66,7 +75,19 @@ export default function UserSecurity() {
             render={({ field }) => (
               <FormItem className='my-3 flex items-center justify-between gap-6'>
                 <div className='space-y-0.5'>
-                  <FormLabel>2FA</FormLabel>
+                  <FormLabel>
+                    2FA
+                    {data?.user?.isTwoFactorEnabled && (
+                      <Badge variant='success' className='ml-1'>
+                        Enabled
+                      </Badge>
+                    )}
+                    {!data?.user?.isTwoFactorEnabled && (
+                      <Badge variant='destructive' className='ml-1'>
+                        Disabled
+                      </Badge>
+                    )}
+                  </FormLabel>
                   <FormDescription>
                     Add an extra layer of security by requiring a verification code at login.
                   </FormDescription>

@@ -1,7 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -13,14 +12,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { UserAvatar } from '@/components/user-avatar'
+import useCurrentUser from '@/hooks/use-current-user'
 import { UpdateUserProfileSchema, UpdateUserProfileSchemaType } from '@/schema/user.schema'
 
 export default function UserProfile() {
   const [isUpdate, setIsUpdate] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { data, update } = useSession()
-  const session = useSession()
+  const { data, update } = useCurrentUser()
   const form = useForm({
     resolver: zodResolver(UpdateUserProfileSchema),
     defaultValues: {
