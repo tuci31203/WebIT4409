@@ -1,20 +1,14 @@
-import { Hash, UserRoundCheck } from "lucide-react";
+import { Hash } from "lucide-react";
 import { MobileToggle } from "@/components/mobile-toggle";
 import { UserAvatar } from "@/components/user-avatar";
 import { SocketIndicator } from "@/components/socket-indicator";
 import { ChatVideoButton } from "./chat-video-button";
-import { Connection, ConnectionStatus } from "@prisma/client";
-import { Button } from "../ui/button";
-import axios from "axios";
-import { ChatConnection } from "./chat-connection";
 
 interface ChatHeaderProps {
     serverId: string;
     name: string;
     type: "channel" | "conversation";
     image?: string;
-    connection?: Connection | undefined,
-    profileId?: string;
 }
 
 
@@ -23,8 +17,6 @@ export const ChatHeader = ({
     name,
     type,
     image,
-    connection,
-    profileId
 }: ChatHeaderProps) => {
     
     return (
@@ -42,12 +34,6 @@ export const ChatHeader = ({
             <p className="font-semibold text-md text-black dark:text-white mr-2">
                 {name}
             </p>
-            {type === "conversation" && (
-                <ChatConnection 
-                    connection={connection}
-                    profileId={profileId}
-                />
-            )}
             <div className="ml-auto flex items-center" >
                 {type === "conversation" && (
                     <ChatVideoButton />

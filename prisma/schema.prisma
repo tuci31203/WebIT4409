@@ -11,7 +11,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Profile{
@@ -26,6 +26,10 @@ model Profile{
   channels Channel[]
   connectionsInitiated Connection[] @relation("ProfileOne")
   connectionsReceived Connection[] @relation("ProfileTwo")
+  conversationsInitiated Conversation1[] @relation("InitiatingUser")
+  conversationsReceived Conversation1[] @relation("ReceivingUser")
+  directMessages DirectMessage1[]
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -190,4 +194,44 @@ model Connection{
   @@index([profileTwoId])
 
   @@unique([profileOneId, profileTwoId])
+}
+
+
+model Conversation1 {
+  id String @id @default(uuid())
+  profileOneId String
+  profileOne Profile @relation("InitiatingUser", fields: [profileOneId], references: [id], onDelete: Cascade)
+
+  profileTwoId String
+  profileTwo Profile @relation("ReceivingUser", fields: [profileTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage1[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([profileOneId])
+  @@index([profileTwoId])
+
+  @@unique([profileOneId, profileTwoId])
+}
+
+model DirectMessage1 {
+  id String @id @default(uuid())
+  content String? @db.Text
+  fileUrl String? @db.Text
+
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  conversationId String
+  conversation Conversation1 @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([conversationId])
 }

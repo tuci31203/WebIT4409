@@ -53,22 +53,6 @@ const MemberIdPage = async ({
 
     const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
-    const connection = await db.connection.findFirst({
-        where: {
-            OR: [
-                {
-                    profileOneId: profile.id,
-                    profileTwoId: otherMember.profile.id
-                },
-                {
-                    profileOneId: otherMember.profile.id,
-                    profileTwoId: profile.id,
-                },
-            ]
-        }
-    });
-    
-
     return (
         <div className="bg-white dark:bg-[#313338] flex flex-col h-full" >
             <ChatHeader
@@ -76,8 +60,6 @@ const MemberIdPage = async ({
                 name={otherMember.profile.name}
                 serverId={serverId}
                 type="conversation"
-                connection={connection || undefined}
-                profileId={otherMember.profile.id}
             />
             {(await searchParams).video && (
                 <MediaRoom

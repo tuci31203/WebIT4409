@@ -7,18 +7,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
-interface ChatConnectionProps {
-    connection?: Connection;
+interface DmConnectionProps {
+    connection: Connection | null;
     profileId?: string;
 }
 
-export const ChatConnection = ({
+export const DmConnection = ({
     connection, profileId
-}: ChatConnectionProps) => {
+}: DmConnectionProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState("");
     const [connectionId, setConnectionId] = useState(connection?.id)
-    console.log(connectionId)
 
     useEffect(() => {
         if(!connection) return;
