@@ -34,7 +34,7 @@ const FriendIdLayout = async ({
 
     return (
         <div className="h-full">
-            <main className="h-full md:pl-60">
+            <main className="h-full">
                 {children}
             </main>
         </div>
