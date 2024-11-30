@@ -12,8 +12,8 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
     const conversations = await db.conversation1.findMany({
         where: {
             OR: [
-                { profileOneId: profile.id},
-                { profileTwoId: profile.id}
+                { profileOneId: profile.id },
+                { profileTwoId: profile.id }
             ]
         },
         include: {
@@ -25,8 +25,8 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
     const connections = await db.connection.findMany({
         where: {
             OR: [
-                { profileOneId: profile.id},
-                { profileTwoId: profile.id}
+                { profileOneId: profile.id },
+                { profileTwoId: profile.id }
             ],
             status: ConnectionStatus.FRIEND
         },
@@ -37,12 +37,12 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
     });
 
     const peopleChattedWith = conversations.map((conversation) => {
-        if(conversation.profileOneId === profile.id) return conversation.profileTwo;
+        if (conversation.profileOneId === profile.id) return conversation.profileTwo;
         return conversation.profileOne;
     });
 
     const friends = connections.map((connection) => {
-        if(connection.profileOneId === profile.id) return connection.profileTwo;
+        if (connection.profileOneId === profile.id) return connection.profileTwo;
         return connection.profileOne;
     });
 
@@ -50,15 +50,15 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
         return !friends.some((friend) => user.id === friend.id);
     })
 
-    
+
     return (
         <div className="flex flex-col h-full text-primary w-full dark:bg-[#2b2d31] bg-[#f2f3f5]">
             <ConversationHeader />
             <ScrollArea className="flex-1 px-3">
                 <div className="mt-2">
-                    <ConversationSearch 
-                        profile={profile} 
-                        peopleChattedWith={peopleChattedWith}    
+                    <ConversationSearch
+                        profile={profile}
+                        peopleChattedWith={peopleChattedWith}
                     />
                 </div>
                 <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
@@ -68,7 +68,8 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
                     </p>
                 </div>
                 {friends.map((userChatWith: Profile, index: number) => (
-                    <ConversationMember 
+                    <ConversationMember
+                        key={index}
                         profile={userChatWith}
                     />
                 ))}
@@ -78,11 +79,11 @@ const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
                     </p>
                 </div>
                 {otherPeople.map((userChatWith: Profile, index: number) => (
-                    <ConversationMember 
+                    <ConversationMember
                         profile={userChatWith}
                     />
                 ))}
-                
+
             </ScrollArea>
         </div>
     );

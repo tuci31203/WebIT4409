@@ -52,7 +52,7 @@ const ConversationIdPage = async ({
             ]
         }
     });
-    
+
 
     return (
         <div className="bg-white dark:bg-[#313338] flex flex-col h-full" >
@@ -61,6 +61,7 @@ const ConversationIdPage = async ({
                 name={otherUser.name}
                 connection={connection}
                 profileId={otherUser.id}
+                profile={profile}
             />
             {(await searchParams).video && (
                 <MediaRoom
