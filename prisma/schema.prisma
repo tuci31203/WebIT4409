@@ -26,6 +26,9 @@ model Profile{
   channels Channel[]
   connectionsInitiated Connection[] @relation("ProfileOne")
   connectionsReceived Connection[] @relation("ProfileTwo")
+  friendConversationsMemberOne FriendConversation[] @relation("FriendMemberOne")
+  friendConversationsMemberTwo FriendConversation[] @relation("FriendMemberTwo")
+   friendMessages FriendMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -168,6 +171,22 @@ model DirectMessage{
   @@index([conversationId])
 }
 
+model FriendMessage{
+  id String @id @default(uuid())
+  content String? @db.Text
+  fileUrl String? @db.Text
+  memberId String
+  member Profile @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  conversationId String
+  conversation FriendConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  deleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([conversationId])
+}
+
 enum ConnectionStatus{
   REQUESTING
   FRIEND
@@ -183,6 +202,8 @@ model Connection{
 
   status ConnectionStatus
 
+  conversations FriendConversation[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -190,4 +211,20 @@ model Connection{
   @@index([profileTwoId])
 
   @@unique([profileOneId, profileTwoId])
+}
+
+model FriendConversation{
+  id String @id @default(uuid())
+  connectionId String
+  connection Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  memberOneId String
+  memberOne Profile @relation("FriendMemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+  memberTwoId String
+  memberTwo Profile @relation("FriendMemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+  friendMessages FriendMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([connectionId])
+  @@unique([memberOneId, memberTwoId])
 }

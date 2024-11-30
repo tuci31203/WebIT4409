@@ -2,16 +2,16 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-interface ServerIdPageProps {
+interface FriendIdPageProps {
   params: {
     friendProfileId: string;
   }
 }
 
 
-const ServerIdPage = async ({
+const FriendIdPage = async ({
   params
-}: ServerIdPageProps) => {
+}: FriendIdPageProps) => {
   const profile = await currentProfile();
   const { friendProfileId } = await params;
 
@@ -23,14 +23,14 @@ const ServerIdPage = async ({
   const server = await db.server.findFirst({
     where: {
       AND: [
-        { 
+        {
           members: {
             some: {
               profileId: profile.id
             }
           }
         },
-        { 
+        {
           members: {
             some: {
               profileId: friendProfileId
@@ -41,7 +41,7 @@ const ServerIdPage = async ({
     }
   })
 
-  if(!server) {
+  if (!server) {
     return redirect("/");
   }
 
@@ -52,11 +52,11 @@ const ServerIdPage = async ({
     }
   })
 
-  if(!member) {
+  if (!member) {
     return redirect("/");
   }
 
   return redirect(`/servers/${server.id}/conversations/${member.id}`)
 }
 
-export default ServerIdPage
+export default FriendIdPage
