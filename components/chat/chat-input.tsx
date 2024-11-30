@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "@/components/emoji-picker";
+import { useSocket } from "../providers/socket-provider";
 
 interface ChatInputProps {
     apiUrl: string;
@@ -44,6 +45,14 @@ export const ChatInput = ({
         }
     });
 
+    const { socket } = useSocket();
+    const FULL_SCREEN_EMOJIS = ['❤️', '🎉', '🤣', '✨', '🔥'];
+    const triggerEmojiEffect = (emoji: string) => {
+        if (socket) {
+            socket.emit('emoji-effect', emoji);
+        }
+    }
+
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -54,6 +63,11 @@ export const ChatInput = ({
             });
 
             await axios.post(url, values);
+            const trimmedContent = values.content.trim();
+            if (FULL_SCREEN_EMOJIS.includes(trimmedContent) && socket) {
+                socket.emit('emoji-effect', trimmedContent);
+            }
+
 
             form.reset();
             router.refresh();
@@ -85,10 +99,29 @@ export const ChatInput = ({
                                         placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                                         {...field}
                                     />
-                                    <div className="absolute top-7 right-8" >
+                                    <div className="absolute top-7 right-8 flex items-center space-x-2" >
                                         <EmojiPicker
-                                            onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
+                                            onChange={(emoji: string) => {
+                                                // Allow triggering full-screen effect for specific emojis 
+                                                if (FULL_SCREEN_EMOJIS.includes(emoji)) {
+                                                    triggerEmojiEffect(emoji);
+                                                }
+                                                field.onChange(`${field.value} ${emoji}`);
+                                            }}
                                         />
+                                        {/* Optional: Quick emoji effect buttons */}
+                                        <div className="flex space-x-1">
+                                            {FULL_SCREEN_EMOJIS.map((emoji) => (
+                                                <button
+                                                    key={emoji}
+                                                    type="button"
+                                                    onClick={() => triggerEmojiEffect(emoji)}
+                                                    className="text-xl hover:scale-125 transition"
+                                                >
+                                                    {emoji}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             </FormControl>

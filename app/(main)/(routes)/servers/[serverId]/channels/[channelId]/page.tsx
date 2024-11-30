@@ -1,6 +1,7 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
+import { EmojiEffectHandler } from "@/components/effects/emoji-effect-handler";
 import { MediaRoom } from "@/components/media-room";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -92,6 +93,7 @@ const ChannelIdPage = async ({
                     audio={true}
                 />
             )}
+            <EmojiEffectHandler />
         </div>
     );
 }
