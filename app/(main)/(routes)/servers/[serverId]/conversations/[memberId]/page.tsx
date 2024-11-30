@@ -1,6 +1,7 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
+import { EmojiEffectHandler } from "@/components/effects/emoji-effect-handler";
 import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/current-profile";
@@ -24,6 +25,7 @@ const MemberIdPage = async ({
 }: MemberIdPageProps) => {
     const profile = await currentProfile();
     const { memberId, serverId } = await params
+    const { video } = await searchParams
 
     if (!profile) {
         return <RedirectToSignIn />;
@@ -55,20 +57,21 @@ const MemberIdPage = async ({
 
     return (
         <div className="bg-white dark:bg-[#313338] flex flex-col h-full" >
+            <EmojiEffectHandler />
             <ChatHeader
                 image={otherMember.profile.image}
                 name={otherMember.profile.name}
                 serverId={serverId}
                 type="conversation"
             />
-            {searchParams.video && (
+            {video && (
                 <MediaRoom
                     chatId={conversation.id}
                     video={true}
                     audio={true}
                 />
             )}
-            {!searchParams.video && (
+            {!video && (
                 <>
                     <ChatMessages
                         member={currentMember}
