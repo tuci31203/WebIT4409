@@ -57,7 +57,17 @@ export async function GET(
             });
         }
 
-        return NextResponse.json(messages);
+        let nextCursor = null;
+
+        if (messages.length === MESSAGES_BATCH) {
+            nextCursor = messages[MESSAGES_BATCH - 1].id;
+        }
+
+
+        return NextResponse.json({
+            items: messages,
+            nextCursor
+        });
     } catch (e) {
         console.log("[FRIEND_MESSAGES_GET] ", e);
         return new NextResponse("Internal error", { status: 500 });

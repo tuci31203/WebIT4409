@@ -120,7 +120,7 @@ export const ChatFriendMessages = ({
             <div className="flex flex-col-reverse mt-auto" >
                 {data?.pages?.map((group, i) => (
                     <Fragment key={i} >
-                        {group.map((message: FriendMessageWithProfile) => (
+                        {group.items.map((message: FriendMessageWithProfile) => (
                             <ChatFriendItem
                                 key={message.id}
                                 id={message.id}

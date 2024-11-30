@@ -31,13 +31,17 @@ export const useChatFriendSocket = ({
                 if (!oldData || !oldData.pages || oldData.pages.length === 0) {
                     return oldData;
                 }
+
                 const newData = oldData.pages.map((page: any) => {
-                    return page.map((item: FriendMessageWithProfile) => {
-                        if (item.id === message.id) {
-                            return message;
-                        }
-                        return item;
-                    });
+                    return {
+                        ...page,
+                        items: page.items.map((item: FriendMessageWithProfile) => {
+                            if (item.id === message.id) {
+                                return message;
+                            }
+                            return item;
+                        })
+                    }
                 });
 
                 return {
@@ -51,18 +55,21 @@ export const useChatFriendSocket = ({
             queryClient.setQueryData([queryKey], (oldData: any) => {
                 if (!oldData || !oldData.pages || oldData.pages.length === 0) {
                     return {
-                        pages: [
-                            [message],
-                        ]
+                        pages: [{
+                            items: [message],
+                        }]
                     }
                 }
 
                 const newData = [...oldData.pages];
 
-                newData[0] = [
-                    message,
+                newData[0] = {
                     ...newData[0],
-                ];
+                    items: [
+                        message,
+                        ...newData[0].items,
+                    ]
+                };
 
                 return {
                     ...oldData,
