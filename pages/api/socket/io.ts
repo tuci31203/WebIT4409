@@ -1,6 +1,6 @@
-import { Server as HttpServer } from 'http'
+import { Server as NetServer } from 'http'
 import { NextApiRequest } from 'next'
-import { Server as ServerIO } from 'socket.io'
+import { Server as ServerIO, ServerOptions } from 'socket.io'
 
 import { NextApiResponseServerIo } from '@/types'
 
@@ -13,12 +13,15 @@ export const config = {
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
     const path = '/api/socket/io'
-    const httpServer: HttpServer = res.socket.server as any
-    const io = new ServerIO(httpServer, {
+    const httpServer: NetServer = res.socket.server as any
+    const io = new ServerIO(httpServer, <ServerOptions>{
       path: path,
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+      },
       addTrailingSlash: false
     })
-
     res.socket.server.io = io
   }
 

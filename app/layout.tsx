@@ -5,6 +5,8 @@ import localFont from 'next/font/local'
 
 import AuthProvider from '@/components/providers/auth-provider'
 import { ModalProvider } from '@/components/providers/modal-provider'
+import { QueryProvider } from '@/components/providers/query-provider'
+import { SocketProvider } from '@/components/providers/socket-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
@@ -32,8 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`, 'bg-white dark:bg-[#313338]')}>
           <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false} storageKey='discord-theme'>
             <Toaster richColors position='top-right' />
-            <ModalProvider />
-            {children}
+            <SocketProvider>
+              <ModalProvider />
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

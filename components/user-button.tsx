@@ -11,7 +11,11 @@ export default async function UserButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <UserAvatar name={user?.name as string} src={user?.image as string} className='cursor-pointer' />
+        <UserAvatar
+          name={user?.name as string}
+          src={user?.image as string}
+          className='cursor-pointer md:h-[48px] md:w-[48px]'
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className='mb-7 p-2' side='right'>
         <div className='mb-2 flex'>

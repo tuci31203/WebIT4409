@@ -11,7 +11,11 @@ const envSchema = z.object({
   AUTH_GITHUB_ID: z.string(),
   AUTH_GITHUB_SECRET: z.string(),
   SESSION_TOKEN_EXPIRES_IN: z.string(),
-  RESEND_EMAIL_API_KEY: z.string()
+  RESEND_EMAIL_API_KEY: z.string(),
+  LIVEKIT_API_KEY: z.string(),
+  LIVEKIT_API_SECRET: z.string(),
+  NEXT_PUBLIC_LIVEKIT_URL: z.string(),
+  LIVEKIT_WEBSOCKET_URL: z.string()
 })
 
 const config = envSchema.safeParse({
@@ -25,7 +29,11 @@ const config = envSchema.safeParse({
   AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
   AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
   SESSION_TOKEN_EXPIRES_IN: process.env.SESSION_TOKEN_EXPIRES_IN,
-  RESEND_EMAIL_API_KEY: process.env.RESEND_EMAIL_API_KEY
+  RESEND_EMAIL_API_KEY: process.env.RESEND_EMAIL_API_KEY,
+  LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY,
+  LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET,
+  NEXT_PUBLIC_LIVEKIT_URL: process.env.NEXT_PUBLIC_LIVEKIT_URL,
+  LIVEKIT_WEBSOCKET_URL: process.env.LIVEKIT_WEBSOCKET_URL
 })
 
 if (!config.success) {
