@@ -1,6 +1,6 @@
 "use client";
 
-import { GitPullRequestArrow, UserRoundCheck, UserRoundPlus, X } from "lucide-react"
+import { UserRoundCheck, UserRoundPlus, X } from "lucide-react"
 import { ActionTooltip } from "../action-tooltip"
 import { useEffect, useState } from "react"
 import { useSocket } from "../providers/socket-provider";
@@ -17,19 +17,27 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
     const [open, setOpen] = useState(false);
     const [requests, setRequests] = useState<ConnectionWithProfile[]>([]);
-    const [isLoading, setIsLoading]= useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    // const [newRequest, setNewRequest] = useState(false);
     const { socket } = useSocket();
     useEffect(() => {
         if(!socket) {
             return;
         }
         
-        socket.on(`connections:${profile.id}:incoming`, (connection: ConnectionWithProfile) => {
-            setRequests(requests => requests.concat([connection]));
+        const newRequestKey = `connections:${profile.id}:incoming`;
+        socket.on(newRequestKey, (connection: ConnectionWithProfile) => {
+            const existing_index = requests.findIndex(request => request.profileOneId === connection.profileOneId);
+            console.log(requests, connection, existing_index);
+            if(existing_index === -1) setRequests(requests.concat([connection]));
+            else setRequests(requests.map((request, index) => {
+                if(index === existing_index) return connection;
+                else return request;
+            }))
         });
 
         return () => {
-            socket.off(`connections:${profile.id}:incoming`);
+            socket.off(newRequestKey);
         }
     }, [socket, profile]);
     const onOpenRequests = async () => {
@@ -38,6 +46,7 @@ export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
             setRequests(res.data);
             setOpen(true);
         } catch(err) {
+            setOpen(false);
             console.log(err);
         }
     }
@@ -77,7 +86,7 @@ export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
                 className="group flex items-center"
             >
                 <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-indigo-500">
-                    <GitPullRequestArrow
+                    <UserRoundPlus
                         className="group-hover:text-white transition dark:text-indigo-200 text-indigo-500"
                         size={25}
                     />
@@ -96,10 +105,10 @@ export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
                         {requests.length} Requests
                     </DialogDescription>
                 </DialogHeader>
-                <ScrollArea className="mt-8 max-h-[420px] px-6 pb-6">
+                <ScrollArea className="mt-8 max-h-[420px] px-6 pb-4">
                     {requests.map((connection, index) => {
                         return (
-                            <div className="flex items-center gap-x-2" key={index}>
+                            <div className="flex items-center gap-x-2 mb-2" key={index}>
                                 <UserAvatar
                                     src={connection.profileOne.image}
                                     className="h-8 w-8 md:h-8 md:w-8"
