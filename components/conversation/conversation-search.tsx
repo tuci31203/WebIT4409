@@ -2,17 +2,17 @@
 
 import { Search } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Profile } from "@prisma/client";
 import { UserAvatar } from "../user-avatar";
-import { db } from "@/lib/db";
 import axios from "axios";
+import { ScrollArea } from "../ui/scroll-area";
 
-const SearchedUser = ({ user }: { user: Profile }) => {
+const SearchedUser = ({ user, onClick }: { user: Profile, onClick: () => void }) => {
     return (
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 cursor-pointer" onClick={onClick}>
             <UserAvatar
                 src={user.image}
                 className="h-8 w-8 md:h-8 md:w-8"
@@ -39,7 +39,6 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
     const [peopleFound, setPeopleFound] = useState<Profile[]>([]);
     const [conversationsFound, setConversationsFound] = useState<Profile[]>([]);
     const router = useRouter();
-    const params = useParams()
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -85,6 +84,11 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
         }
     }
 
+    const onUserClick = (otherUserId: string) => {
+        router.push(`/conversations/${otherUserId}`);
+        setOpen(false);
+    }
+
     return (
         <>
             <button
@@ -115,7 +119,7 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                             className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         />
                     </DialogHeader>
-                    <div className="px-6 mb-3">
+                    <ScrollArea className="max-h-[420px] px-6 mb-6">
                         {(peopleFound.length === 0 && conversationsFound.length === 0) && (
                             <div className="flex flex-col flex-1 justify-center items-center">
                                 <p className="text-xs text-zinc-500 dark:text-zinc-400" >
@@ -129,7 +133,11 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                                     People
                                 </div>
                                 {peopleFound.map((profile: Profile, index: number) => (
-                                    <SearchedUser user={profile} key={index} />
+                                    <SearchedUser 
+                                        user={profile}
+                                        onClick={() => onUserClick(profile.id)}
+                                        key={index}  
+                                    />
                                 ))}
                             </div>
                         )}
@@ -139,11 +147,16 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                                     Conversations
                                 </div>
                                 {conversationsFound.map((profile: Profile, index: number) => (
-                                    <SearchedUser user={profile} key={index} />
+                                    <SearchedUser 
+                                        user={profile}
+                                        onClick={() => onUserClick(profile.id)}
+                                        key={index}  
+                                    />
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </ScrollArea>
+                    
                     
                 </DialogContent>
                 

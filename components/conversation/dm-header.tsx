@@ -9,7 +9,7 @@ interface DmHeaderProps {
     name: string;
     image?: string;
     connection: Connection | null,
-    profileId?: string;
+    otherUserId?: string;
     profile: Profile;
 }
 
@@ -18,7 +18,7 @@ export const DmHeader = ({
     name,
     image,
     connection,
-    profileId,
+    otherUserId,
     profile
 }: DmHeaderProps) => {
 
@@ -34,7 +34,8 @@ export const DmHeader = ({
             </p>
             <DmConnection
                 connection={connection}
-                profileId={profileId}
+                otherUserId={otherUserId}
+                profileId={profile.id}
             />
             <div className="ml-auto flex items-center" >
                 <DmVideoButton />

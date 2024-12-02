@@ -60,7 +60,7 @@ const ConversationIdPage = async ({
                 image={otherUser.image}
                 name={otherUser.name}
                 connection={connection}
-                profileId={otherUser.id}
+                otherUserId={otherUser.id}
                 profile={profile}
             />
             {(await searchParams).video && (

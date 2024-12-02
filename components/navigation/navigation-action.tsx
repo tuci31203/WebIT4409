@@ -4,9 +4,11 @@ import { MessageCircle, Plus } from "lucide-react"
 import { ActionTooltip } from "../action-tooltip"
 import { useModal } from "@/hooks/use-modal-store"
 import { useRouter } from "next/navigation"
-import { Separator } from "@radix-ui/react-dropdown-menu"
+import { Separator } from "../ui/separator"
+import { Profile } from "@prisma/client"
+import { FriendRequestsTooltip } from "./friend-requests-tooltip"
 
-export const NavigationAction = () => {
+export const NavigationAction = ({ profile }: { profile: Profile }) => {
     const { onOpen } = useModal()
     const router = useRouter();
 
@@ -29,6 +31,7 @@ export const NavigationAction = () => {
                     </div>
                 </button>
             </ActionTooltip>
+            <FriendRequestsTooltip profile={profile} />
             <Separator
                 className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto"
             />

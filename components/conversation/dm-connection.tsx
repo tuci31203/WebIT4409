@@ -6,34 +6,76 @@ import { UserRoundCheck, UserRoundPlus, UserRoundX, X } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { useSocket } from "../providers/socket-provider";
+import { ConnectionWithProfile } from "@/types";
+import { useRouter } from "next/navigation";
 
 interface DmConnectionProps {
     connection: Connection | null;
+    otherUserId?: string;
     profileId?: string;
 }
 
 export const DmConnection = ({
-    connection, profileId
+    connection, otherUserId, profileId
 }: DmConnectionProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState("");
     const [connectionId, setConnectionId] = useState(connection?.id)
+    const { socket } = useSocket();
+    const router = useRouter()
 
     useEffect(() => {
         if(!connection) return;
         if(connection?.status === ConnectionStatus.FRIEND) setStatus("friends")
         if(connection?.status === ConnectionStatus.REQUESTING) {
-            if(connection.profileOneId === profileId) setStatus("requested")
+            if(connection.profileOneId === otherUserId) setStatus("requested")
             else setStatus("requesting")
         }
-    }, [connection, profileId])
+    }, [connection, otherUserId]);
+
+    useEffect(() => {
+        if(!socket) return;
+
+        const newRequestKey = `connections:${profileId}:incoming`;
+        const newFriendKey = `connections:${profileId}:newfriends`;
+        const deleteKey = `connections:${profileId}:delete`;
+
+        socket.on(newRequestKey, (newRequest: ConnectionWithProfile) => {
+            if(newRequest.profileOneId === otherUserId) {
+                setConnectionId(newRequest.id);
+                setStatus("requested");
+            }
+        });
+        socket.on(newFriendKey, (newFriend: ConnectionWithProfile) => {
+            if(newFriend.profileTwoId === otherUserId) {
+                setConnectionId(newFriend.id);
+                setStatus("friends");
+            }
+        });
+        socket.on(deleteKey, (deletedConnection: ConnectionWithProfile) => {
+            if(deletedConnection.profileOneId === otherUserId || deletedConnection.profileTwoId === otherUserId) {
+                setStatus("");
+                setConnectionId(deletedConnection.id);
+
+            }
+        });
+
+        return () => {
+            socket.off(newRequestKey);
+            socket.off(newFriendKey);
+            socket.off(deleteKey);
+        }
+    }, [socket, profileId]);
     const onAddFriend = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.post('/api/connections', { requestedProfileId: profileId});
+            const res = await axios.post('/api/socket/connections', { requestedProfileId: otherUserId });
             setConnectionId(res.data?.id);
-            setStatus("requesting")
+            setStatus("requesting");
         } catch (err) {
+            router.refresh();
+            window.location.reload();
             console.log(err);
         } finally {
             setIsLoading(false);
@@ -43,10 +85,12 @@ export const DmConnection = ({
     const onUnrequest = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.delete(`/api/connections/${connectionId}`);
+            const res = await axios.delete(`/api/socket/connections/${connectionId}`);
             setConnectionId(res.data?.id);
-            setStatus("")
+            setStatus("");
         } catch (err) {
+            router.refresh();
+            window.location.reload();
             console.log(err);
         } finally {
             setIsLoading(false);
@@ -56,10 +100,12 @@ export const DmConnection = ({
     const onAccept = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.patch(`/api/connections/${connectionId}`);
+            const res = await axios.patch(`/api/socket/connections/${connectionId}`);
             setConnectionId(res.data?.id);
             setStatus("friends")
         } catch (err) {
+            router.refresh();
+            window.location.reload();
             console.log(err);
         } finally {
             setIsLoading(false);

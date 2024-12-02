@@ -27,7 +27,7 @@ const InitialConversationPage = async () => {
     return (
         <div className="flex flex-col flex-1 justify-center items-center" >
             <p className="text-xs text-zinc-500 dark:text-zinc-400" >
-                Something went wrong!
+              Create a new conversation
             </p>
         </div>
     )
