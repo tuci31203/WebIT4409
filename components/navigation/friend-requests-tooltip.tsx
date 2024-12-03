@@ -37,8 +37,8 @@ export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
         const deleteRequestKey = `connections:${profile.id}:delete`;
         socket.on(newRequestKey, (connection: ConnectionWithProfile) => {
             setRequests(requests => requests.concat([connection]));
-            setHasNewRequests(true);
-            localStorage.setItem("hasNewRequests", JSON.stringify(true));
+            setHasNewRequests(!open);
+            localStorage.setItem("hasNewRequests", JSON.stringify(!open));
         });
 
         socket.on(deleteRequestKey, (deletedConnection: ConnectionWithProfile) => {
