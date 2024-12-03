@@ -56,7 +56,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ membe
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
-export async function PATCH(req: Request, { params }: { params: { memberId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ memberId: string }> }) {
   try {
     const user = await currentProfile()
     const { searchParams } = new URL(req.url)

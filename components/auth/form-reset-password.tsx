@@ -1,7 +1,7 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusCodes } from 'http-status-codes'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -10,13 +10,13 @@ import { resetPasswordAction } from '@/actions/auth.action'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { getQueryParams } from '@/lib/utils'
 import { ResetPasswordBody, ResetPasswordBodyType } from '@/schema/auth.schema'
 
 export default function FormResetPassword() {
   const [loading, setLoading] = useState<boolean>(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const token = searchParams?.get('token')
+  const token = getQueryParams('token')
 
   const form = useForm({
     resolver: zodResolver(ResetPasswordBody),

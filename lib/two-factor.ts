@@ -7,7 +7,7 @@ import { generateRandomOTP } from '@/utils/crypto'
 
 export const generateTwoFactorToken = async (email: string) => {
   const token = generateRandomOTP(email)
-  const expires = addMilliseconds(new Date(), ms('1m'))
+  const expires = addMilliseconds(new Date(), ms('5m'))
 
   const existingToken = await getTwoFactorTokenByEmail(email)
 

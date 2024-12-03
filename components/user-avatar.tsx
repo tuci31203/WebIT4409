@@ -38,9 +38,9 @@ export const UserAvatar = ({ src, name, className }: UserAvatarProps) => {
   const avatarColor = getColorFromName(name as string)
 
   return (
-    <Avatar className={cn('h-7 w-7 md:h-10 md:w-10', className)}>
+    <Avatar className={cn('h-7 w-7 md:h-10 md:w-10', className)} role='button'>
       <AvatarImage src={src} alt={name} />
-      <AvatarFallback className={avatarColor}>{initial}</AvatarFallback>
+      <AvatarFallback className={cn(avatarColor, 'text-xs font-bold md:text-sm')}>{initial}</AvatarFallback>
     </Avatar>
   )
 }

@@ -1,20 +1,18 @@
 'use client'
 import { CircleCheck, CircleX } from 'lucide-react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 import { verifyEmailAction } from '@/actions/auth.action'
 import Logo from '@/components/icons/logo'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, getQueryParams } from '@/lib/utils'
 
 export default function Page() {
   const [message, setMessage] = useState<string>('')
   const [status, setStatus] = useState<boolean>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const searchParams = useSearchParams()
-  const token = searchParams?.get('token')
+  const token = getQueryParams('token')
 
   const onSubmit = useCallback(async () => {
     if (!token) {
@@ -45,7 +43,7 @@ export default function Page() {
       {!isLoading && !status && <CircleX size={35} className='rounded-full bg-destructive/15 text-destructive' />}
       {!isLoading && status && <CircleCheck size={35} className='rounded-full bg-emerald-500/15 text-emerald-500' />}
 
-      <p className={cn(status ? 'text-emerald-500' : 'text-destructive')}>{message}</p>
+      <p className={cn(status ? 'text-emerald-500' : 'text-destructive', 'font-bold')}>{message}</p>
       <div className='flex w-full items-center justify-center gap-x-3 sm:w-auto'>
         <Link href='/signin'>
           <Button variant='outline'>Back to sign in</Button>

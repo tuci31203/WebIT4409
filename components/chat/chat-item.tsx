@@ -60,7 +60,6 @@ export const ChatItem = ({
   const { onOpen } = useModal()
   const params = useParams()
   const router = useRouter()
-  console.log('member', member)
 
   const onMemberClick = () => {
     if (member.id === currentMember.id) {

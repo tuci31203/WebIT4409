@@ -9,18 +9,19 @@ import { currentProfile } from '@/lib/current-profile'
 import db from '@/lib/db'
 
 interface MemberIdPageProps {
-  params: {
+  params: Promise<{
     memberId: string
     serverId: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     video?: boolean
-  }
+  }>
 }
 
 const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
   const user = await currentProfile()
   const { memberId, serverId } = await params
+  const { video } = await searchParams
 
   const currentMember = await db.member.findFirst({
     where: {
@@ -48,13 +49,18 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
 
   return (
     <div className='flex h-full flex-col bg-white dark:bg-[#313338]'>
-      <ChatHeader image={otherMember.user.image} name={otherMember.user.name} serverId={serverId} type='conversation' />
-      {searchParams.video && <MediaRoom chatId={conversation.id} video={true} audio={true} />}
-      {!searchParams.video && (
+      <ChatHeader
+        image={otherMember.user.image as string}
+        name={otherMember.user.name as string}
+        serverId={serverId}
+        type='conversation'
+      />
+      {video && <MediaRoom chatId={conversation.id} video={true} audio={true} />}
+      {!video && (
         <>
           <ChatMessages
             member={currentMember}
-            name={otherMember.user.name}
+            name={otherMember.user.name as string}
             chatId={conversation.id}
             type='conversation'
             apiUrl='/api/direct-messages'
@@ -66,7 +72,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
             }}
           />
           <ChatInput
-            name={otherMember.user.name}
+            name={otherMember.user.name as string}
             type='conversation'
             apiUrl='/api/socket/direct-messages'
             query={{

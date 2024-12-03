@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusCodes } from 'http-status-codes'
 import { ChevronsRight, RefreshCcw } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import { getQueryParams } from '@/lib/utils'
 import { SignInBody, SignInBodyType } from '@/schema/auth.schema'
 
 export default function FormSignIn() {
@@ -23,8 +24,7 @@ export default function FormSignIn() {
   const [canResend, setCanResend] = useState(false)
   const [currentEmail, setCurrentEmail] = useState('')
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const errorParam = searchParams?.get('error')
+  const errorParam = getQueryParams('error')
   const form = useForm({
     resolver: zodResolver(SignInBody),
     defaultValues: {
@@ -108,6 +108,7 @@ export default function FormSignIn() {
         toast.success(result?.message)
         setCountdown(60)
         setCanResend(false)
+        form.setValue('codeOTP', '')
       } else {
         toast.error(result?.message || 'Failed to resend OTP')
       }

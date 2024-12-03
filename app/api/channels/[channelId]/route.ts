@@ -53,7 +53,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ chann
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { channelId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ channelId: string }> }) {
   try {
     const user = await currentProfile()
 
