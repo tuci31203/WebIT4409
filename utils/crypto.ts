@@ -14,3 +14,7 @@ export const generateRandomOTP = (email: string) => {
 
   return otp.toString().padStart(6, '0')
 }
+export const generateRandomImage = (name: string) => {
+  const hashName = CryptoJS.MD5(name).toString()
+  return `https://api.dicebear.com/9.x/avataaars/svg?seed=${hashName}`
+}

@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { changeProfileAction } from '@/actions/user.action'
+import AvatarUploadButton from '@/components/avatar-upload-button'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,7 +26,7 @@ export default function UserProfile() {
     resolver: zodResolver(UpdateUserProfileSchema),
     defaultValues: {
       name: data?.user?.name as string
-    }
+    } as UpdateUserProfileSchemaType
   })
 
   const onSubmit = async (data: UpdateUserProfileSchemaType) => {
@@ -32,8 +34,14 @@ export default function UserProfile() {
     setIsLoading(true)
 
     try {
+      const result = await changeProfileAction(data)
       await update({ name: data.name })
-      toast.success('Profile updated successfully')
+      if (!result?.success) {
+        toast.error(result?.message)
+        return
+      }
+
+      toast.success(result?.message)
       router.refresh()
     } catch (errors) {
       console.log(errors)
@@ -69,9 +77,7 @@ export default function UserProfile() {
               <div className='flex gap-6'>
                 <UserAvatar src={data?.user?.image as string} name={data?.user?.name as string} />
                 <div className='space-y-2'>
-                  <Button variant='outline' size='sm'>
-                    Upload
-                  </Button>
+                  <AvatarUploadButton endpoint='serverImage' />
                   <p className='text-xs text-muted-foreground'>Recommended size 1:1, up to 4MB</p>
                 </div>
               </div>
@@ -109,9 +115,16 @@ export default function UserProfile() {
         <p className='w-64'>Email address</p>
         <div className='flex items-center gap-6 text-muted-foreground'>
           <p>{data?.user?.email}</p>
-          <Badge variant='success' className='text-xs'>
-            Verified
-          </Badge>
+          {data?.user?.provider !== 'Credentials' && (
+            <Badge variant='info' className='text-xs'>
+              {data?.user?.provider} Account
+            </Badge>
+          )}
+          {data?.user?.provider === 'Credentials' && (
+            <Badge variant='success' className='text-xs'>
+              Verified
+            </Badge>
+          )}
         </div>
       </div>
     </>

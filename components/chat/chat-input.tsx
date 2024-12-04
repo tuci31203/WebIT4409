@@ -1,10 +1,10 @@
 'use client'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import qs from 'query-string'
+import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -27,6 +27,8 @@ const formSchema = z.object({
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const { onOpen } = useModal()
   const router = useRouter()
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,10 +49,18 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
 
       form.reset()
       router.refresh()
+
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
     } catch (error) {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   return (
     <Form {...form}>
@@ -65,7 +75,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                   <button
                     type='button'
                     onClick={() => onOpen('messageFile', { apiUrl, query })}
-                    className='absolute left-8 top-7 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-zinc-500 p-1 transition hover:bg-zinc-600 dark:bg-zinc-400 dark:hover:bg-zinc-300'
+                    className='absolute left-8 top-7 z-50 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-zinc-500 p-1 transition hover:bg-zinc-600 dark:bg-zinc-400 dark:hover:bg-zinc-300'
                   >
                     <Plus className='text-white dark:text-[#313338]' />
                   </button>
@@ -74,9 +84,15 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                     className='border-0 border-none bg-zinc-200/90 px-14 py-6 text-zinc-600 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-zinc-700/75 dark:text-zinc-200'
                     placeholder={`Message ${type === 'conversation' ? name : '#' + name}`}
                     {...field}
+                    ref={inputRef}
                   />
                   <div className='absolute right-8 top-7'>
-                    <EmojiPicker onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)} />
+                    <EmojiPicker
+                      onChange={(emoji: string) => {
+                        field.onChange(`${field.value} ${emoji}`)
+                        inputRef.current?.focus()
+                      }}
+                    />
                   </div>
                 </div>
               </FormControl>

@@ -11,3 +11,10 @@ export function getQueryParams(param: string) {
   const parser = qs.parse(window.location.search)
   return parser[param] as string | undefined
 }
+export function toTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}

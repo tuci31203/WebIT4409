@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'utfs.io',
         pathname: '**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+        pathname: '/9.x/**'
       }
     ]
     // domains: ["uploadthing.com"],

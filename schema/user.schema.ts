@@ -1,9 +1,14 @@
 import z from 'zod'
 
 export const UpdateUserProfileSchema = z.object({
-  name: z.string().min(1, {
-    message: 'Name is required'
-  })
+  name: z
+    .string()
+    .min(1, {
+      message: 'Name is required'
+    })
+    .optional(),
+  image: z.string().optional(),
+  isTwoFactorEnabled: z.boolean().optional()
 })
 
 export type UpdateUserProfileSchemaType = z.infer<typeof UpdateUserProfileSchema>
@@ -26,9 +31,3 @@ export const ChangePasswordSchema = z
   })
 
 export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>
-
-export const TwoFactorAuthSchema = z.object({
-  twoFactorAuth: z.boolean()
-})
-
-export type TwoFactorAuthSchemaType = z.infer<typeof TwoFactorAuthSchema>

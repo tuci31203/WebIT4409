@@ -1,5 +1,5 @@
 import db from '@/lib/db'
-import { hashPassword } from '@/utils/crypto'
+import { generateRandomImage, hashPassword } from '@/utils/crypto'
 
 type User = {
   email: string
@@ -11,11 +11,13 @@ export const createUser = async (data: User) => {
   const { email, password, name } = data
 
   const hashedPassword = await hashPassword(password)
+  const image = generateRandomImage(name)
   return db.user.create({
     data: {
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      image
     },
     select: {
       id: true,

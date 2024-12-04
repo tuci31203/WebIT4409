@@ -1,8 +1,9 @@
 'use server'
+import { unstable_update } from '@/lib/auth'
 import { currentProfile } from '@/lib/current-profile'
 import db from '@/lib/db'
-import { ChangePasswordSchemaType } from '@/schema/user.schema'
-import { findUserByEmail } from '@/service/user.service'
+import { ChangePasswordSchemaType, UpdateUserProfileSchemaType } from '@/schema/user.schema'
+import { findUserByEmail, findUserById } from '@/service/user.service'
 import { comparePassword, hashPassword } from '@/utils/crypto'
 
 export const changePasswordAction = async (data: ChangePasswordSchemaType) => {
@@ -51,6 +52,52 @@ export const changePasswordAction = async (data: ChangePasswordSchemaType) => {
     return {
       success: false,
       error: 'Failed to update password'
+    }
+  }
+}
+
+export const changeProfileAction = async (data: UpdateUserProfileSchemaType) => {
+  const currentUser = await currentProfile()
+  const { name, image, isTwoFactorEnabled } = data
+
+  const existingUser = await findUserById(currentUser?.id)
+
+  if (!existingUser) {
+    return {
+      success: false,
+      message: 'Unauthorized: User not found'
+    }
+  }
+
+  const updateData: Partial<UpdateUserProfileSchemaType> = {}
+  if (name !== undefined) updateData.name = name
+  if (image !== undefined) updateData.image = image
+  if (isTwoFactorEnabled !== undefined) updateData.isTwoFactorEnabled = isTwoFactorEnabled
+
+  try {
+    await db.user.update({
+      where: {
+        id: existingUser?.id
+      },
+      data: updateData
+    })
+
+    await unstable_update({
+      user: {
+        ...currentUser,
+        ...updateData
+      }
+    })
+
+    return {
+      success: true,
+      message: 'User profile updated successfully'
+    }
+  } catch (errors) {
+    console.error(errors)
+    return {
+      success: false,
+      error: 'Failed to update profile info'
     }
   }
 }
