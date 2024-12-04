@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { changeProfileAction } from '@/actions/user.action'
 import FormChangePassword from '@/components/auth/form-change-password'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } fr
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import useCurrentUser from '@/hooks/use-current-user'
-import { TwoFactorAuthSchema, TwoFactorAuthSchemaType } from '@/schema/user.schema'
+import { UpdateUserProfileSchema, UpdateUserProfileSchemaType } from '@/schema/user.schema'
 
 export default function UserSecurity() {
   const { data, update } = useCurrentUser()
@@ -21,19 +22,22 @@ export default function UserSecurity() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const form = useForm({
-    resolver: zodResolver(TwoFactorAuthSchema),
+    resolver: zodResolver(UpdateUserProfileSchema),
     defaultValues: {
-      twoFactorAuth: data?.user?.isTwoFactorEnabled as boolean
-    }
+      isTwoFactorEnabled: data?.user?.isTwoFactorEnabled as boolean
+    } as UpdateUserProfileSchemaType
   })
-  console.log(data?.user)
-
-  const onSubmit = async (data: TwoFactorAuthSchemaType) => {
+  const onSubmit = async (data: UpdateUserProfileSchemaType) => {
     if (isLoading) return
     setIsLoading(true)
 
     try {
-      await update({ isTwoFactorEnabled: data.twoFactorAuth })
+      const result = await changeProfileAction(data)
+      await update({ isTwoFactorEnabled: data.isTwoFactorEnabled })
+      if (!result?.success) {
+        toast.error(result?.message)
+        return
+      }
       toast.success('Two factor authentication updated successfully')
       router.refresh()
     } catch (errors) {
@@ -47,6 +51,11 @@ export default function UserSecurity() {
   return (
     <>
       <p className='mb-3 text-xl font-bold'>Profile details</p>
+      {data?.user?.isOAuth && (
+        <div className='pb-4 text-xs font-bold text-destructive'>
+          You are logged in using {data?.user.provider} account. Password and 2FA settings cannot be changed.
+        </div>
+      )}
       <Separator />
       <div className='my-3 flex min-w-0 items-center justify-between gap-6'>
         <p className='w-64 text-sm'>Security</p>
@@ -61,7 +70,7 @@ export default function UserSecurity() {
               <CardTitle className='pl-1 text-sm'>Update profile</CardTitle>
             </CardHeader>
             <CardContent className='px-5 py-0'>
-              <FormChangePassword setIsUpdate={setIsUpdate} />
+              <FormChangePassword setIsUpdate={setIsUpdate} isOAuth={data?.user?.isOAuth} />
             </CardContent>
           </Card>
         )}
@@ -71,7 +80,7 @@ export default function UserSecurity() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name='twoFactorAuth'
+            name='isTwoFactorEnabled'
             render={({ field }) => (
               <FormItem className='my-3 flex items-center justify-between gap-6'>
                 <div className='space-y-0.5'>
@@ -93,7 +102,7 @@ export default function UserSecurity() {
                   </FormDescription>
                 </div>
                 <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} disabled={data?.user.isOAuth} />
                 </FormControl>
               </FormItem>
             )}

@@ -3,6 +3,7 @@ import NextAuth from 'next-auth'
 
 import authConfig from '@/config/auth.config'
 import db from '@/lib/db'
+import { toTitleCase } from '@/lib/utils'
 import { getTwoFactorConfirmationByUserId } from '@/service/two-factor.service'
 import { findUserById } from '@/service/user.service'
 
@@ -49,38 +50,32 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
       if (session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
+        session.user.name = token.name
+        session.user.image = token.image as string
+        session.user.isOAuth = token.isOAuth as boolean
+        session.user.provider = toTitleCase(token?.provider as string)
       }
       return session
     },
-    async jwt({ token, session, trigger }) {
+    async jwt({ token, account }) {
       if (!token.sub) return token
 
       const existingUser = await findUserById(token.sub)
 
       if (!existingUser) return token
 
-      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
+      const existingAccount = await db.account.findFirst({
+        where: { userId: existingUser.id }
+      })
 
-      if (trigger === 'update' && session) {
-        const updateData: Record<string, unknown> = {}
-
-        if (session.name) {
-          token.name = session.name
-          updateData.name = session.name
-        }
-
-        if (session.isTwoFactorEnabled !== undefined) {
-          token.isTwoFactorEnabled = session.isTwoFactorEnabled
-          updateData.isTwoFactorEnabled = session.isTwoFactorEnabled as boolean
-        }
-
-        if (Object.keys(updateData).length > 0) {
-          await db.user.update({
-            where: { id: token.sub },
-            data: updateData
-          })
-        }
+      if (account?.provider) {
+        token.provider = account.provider
       }
+
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
+      token.name = existingUser.name
+      token.image = existingUser.image
+      token.isOAuth = !!existingAccount
 
       return token
     }

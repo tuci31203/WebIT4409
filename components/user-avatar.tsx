@@ -39,7 +39,7 @@ export const UserAvatar = ({ src, name, className }: UserAvatarProps) => {
 
   return (
     <Avatar className={cn('h-7 w-7 md:h-10 md:w-10', className)} role='button'>
-      <AvatarImage src={src} alt={name} />
+      <AvatarImage src={src} alt={name} className='rounded-full border border-gray-300' />
       <AvatarFallback className={cn(avatarColor, 'text-xs font-bold md:text-sm')}>{initial}</AvatarFallback>
     </Avatar>
   )

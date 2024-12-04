@@ -10,7 +10,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { ChangePasswordSchema, ChangePasswordSchemaType } from '@/schema/user.schema'
 
-export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (value: boolean) => void }) {
+export default function FormChangePassword({
+  setIsUpdate,
+  isOAuth
+}: {
+  setIsUpdate: (value: boolean) => void
+  isOAuth: boolean | undefined
+}) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const form = useForm({
@@ -22,7 +28,7 @@ export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (valu
     }
   })
   const onSubmit = async (data: ChangePasswordSchemaType) => {
-    if (isLoading) return
+    if (isLoading || isOAuth) return
     setIsLoading(true)
 
     try {
@@ -52,7 +58,7 @@ export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (valu
               <FormItem>
                 <FormLabel className='text-xs'>Current Password</FormLabel>
                 <FormControl>
-                  <Input {...field} type='password' className='h-8 px-2 text-xs' />
+                  <Input {...field} type='password' className='h-8 px-2 text-xs' disabled={isOAuth} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -65,7 +71,7 @@ export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (valu
               <FormItem>
                 <FormLabel className='text-xs'>New Password</FormLabel>
                 <FormControl>
-                  <Input {...field} type='password' className='h-8 px-2 text-xs' />
+                  <Input {...field} type='password' className='h-8 px-2 text-xs' disabled={isOAuth} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -78,7 +84,7 @@ export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (valu
               <FormItem>
                 <FormLabel className='text-xs'>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input {...field} type='password' className='h-8 px-2 text-xs' />
+                  <Input {...field} type='password' className='h-8 px-2 text-xs' disabled={isOAuth} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +94,7 @@ export default function FormChangePassword({ setIsUpdate }: { setIsUpdate: (valu
             <Button type='button' variant='outline' size='sm' onClick={() => setIsUpdate(false)}>
               Cancel
             </Button>
-            <Button size='sm' variant='primary' type='submit' disabled={isLoading}>
+            <Button size='sm' variant='primary' type='submit' disabled={isLoading || isOAuth}>
               Save
             </Button>
           </div>
