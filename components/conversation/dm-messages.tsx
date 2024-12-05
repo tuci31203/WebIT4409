@@ -1,47 +1,43 @@
 "use client";
 
-import { Member, Message, Profile } from "@prisma/client";
-import { ChatWelcome } from "./chat-welcome";
+import { Message, Profile } from "@prisma/client";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment, useRef, ElementRef } from "react";
-import { ChatIem } from "./chat-item";
 import { format } from "date-fns";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
+import { DmItem } from "./dm-item";
+import { DmWelcome } from "./dm-welcome";
 
 
-type MessageWithMemberWithProfile = Message & {
-    member: Member & {
-        profile: Profile
-    }
+type MessageWithProfile = Message & {
+    profile: Profile
 }
 
-interface ChatMessagesProps {
+interface DmMessagesProps {
     name: string;
-    member: Member;
+    profile: Profile;
     chatId: string;
     apiUrl: string;
     socketUrl: string;
     socketQuery: Record<string, string>;
     paramKey: "channelId" | "conversationId";
     paramValue: string;
-    type: "channel" | "conversation";
 }
 
 const DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; // Định dạng ngày giờ
 
-export const ChatMessages = ({
+export const DmMessages = ({
     name,
-    member,
+    profile,
     chatId,
     apiUrl,
     socketUrl,
     socketQuery,
     paramKey,
     paramValue,
-    type,
-}: ChatMessagesProps) => {
+}: DmMessagesProps) => {
     const queryKey = `chat:${chatId}`;
     const addKey = `chat:${chatId}:messages`;
     const updateKey = `chat:${chatId}:messages:update`;
@@ -96,8 +92,7 @@ export const ChatMessages = ({
         <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto" >
             {!hasNextPage && <div className="flex-1" />}
             {!hasNextPage && (
-                <ChatWelcome
-                    type={type}
+                <DmWelcome
                     name={name}
                 />
             )}
@@ -118,12 +113,12 @@ export const ChatMessages = ({
             <div className="flex flex-col-reverse mt-auto" >
                 {data?.pages?.map((group, i) => (
                     <Fragment key={i} >
-                        {group?.items?.map((message: MessageWithMemberWithProfile) => (
-                            <ChatIem
+                        {group?.items?.map((message: MessageWithProfile) => (
+                            <DmItem
                                 key={message.id}
                                 id={message.id}
-                                currentMember={member}
-                                member={message.member}
+                                currentUser={profile}
+                                profile={message.profile}
                                 content={message.content || ""}
                                 fileUrl={message.fileUrl}
                                 deleted={message.deleted}

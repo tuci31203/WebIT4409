@@ -13,13 +13,13 @@ type SocketContextType = {
     isConnected: boolean;
 };
 
-const SockerContext = createContext<SocketContextType>({
+const SocketContext = createContext<SocketContextType>({
     socket: null,
     isConnected: false,
 });
 
 export const useSocket = () => {
-    return useContext(SockerContext);
+    return useContext(SocketContext);
 };
 
 export const SocketProvider = ({
@@ -33,6 +33,7 @@ export const SocketProvider = ({
     useEffect(() => {
         const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
             path: "/api/socket/io",
+            // @ts-ignore
             addTrailingSlash: false,
         });
 
@@ -52,8 +53,8 @@ export const SocketProvider = ({
     }, []);
 
     return (
-        <SockerContext.Provider value={{ socket, isConnected }} >
+        <SocketContext.Provider value={{ socket, isConnected }} >
             {children}
-        </SockerContext.Provider>
+        </SocketContext.Provider>
     )
 }
