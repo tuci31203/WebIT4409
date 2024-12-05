@@ -24,6 +24,12 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
             addTrailingSlash: false,
         });
         res.socket.server.io = io;
+
+        io.on('connection', (socket) => {
+            socket.on('emoji-effect', (emoji: string) => {
+                io.emit('emoji-effect', emoji);
+            });
+        });
     }
 
     res.end();

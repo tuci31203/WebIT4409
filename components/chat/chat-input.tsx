@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "@/components/emoji-picker";
+import { EmojiEffectButton } from "../effects/emoji-effect-button";
 
 interface ChatInputProps {
     apiUrl: string;
@@ -43,6 +44,7 @@ export const ChatInput = ({
             content: "",
         }
     });
+
 
     const isLoading = form.formState.isSubmitting;
 
@@ -85,10 +87,11 @@ export const ChatInput = ({
                                         placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                                         {...field}
                                     />
-                                    <div className="absolute top-7 right-8" >
+                                    <div className="absolute top-7 right-8 flex items-center space-x-2" >
                                         <EmojiPicker
                                             onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
                                         />
+                                        <EmojiEffectButton />
                                     </div>
                                 </div>
                             </FormControl>

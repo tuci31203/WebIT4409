@@ -76,3 +76,15 @@ body,
 }
 
 @import "~@uploadthing/react/styles.css";
+
+
+.dark .sidebar-pattern{
+  background-image: url('/images/nav_bg_dark.png');
+  background-repeat: repeat;
+  background-size: 100px;
+}
+.sidebar-pattern{
+  background-image: url('/images/nav_bg_light.png');
+  background-repeat: repeat;
+  background-size: 100px;
+}

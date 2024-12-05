@@ -22,6 +22,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Discode",
   description: "Group 5 - WebIT4409",
+  icons: {
+    icon: "/favicon.ico",
+  }
 };
 
 export default function RootLayout({
