@@ -1,5 +1,5 @@
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import { NavigationAction } from "./navigation-action";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,7 +27,7 @@ export const NavigationSidebar = async () => {
     <div
       className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1e1f22] bg-[#e3e5e8] py-3"
     >
-      <NavigationAction profile={profile} />
+      <NavigationAction profile={user} />
       <ScrollArea className="flex-1 w-full">
         {servers.map(server => (
           <div key={server.id} className="mb-4">

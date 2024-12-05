@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { currentProfile } from '@/lib/current-profile'
+import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ memberId: string }> }) {

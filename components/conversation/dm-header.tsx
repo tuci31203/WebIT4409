@@ -1,6 +1,6 @@
 import { UserAvatar } from "@/components/user-avatar";
 import { SocketIndicator } from "@/components/socket-indicator";
-import { Connection, Profile } from "@prisma/client";
+import { Connection, User } from "@prisma/client";
 import { DmConnection } from "./dm-connection";
 import { DmVideoButton } from "./dm-video-button";
 import { ConversationMobileToggle } from "./conversation-mobile";
@@ -10,7 +10,7 @@ interface DmHeaderProps {
     image?: string;
     connection: Connection | null,
     otherUserId?: string;
-    profile: Profile;
+    profile: User;
 }
 
 

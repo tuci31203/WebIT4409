@@ -4,9 +4,8 @@ import { ChatMessages } from "@/components/chat/chat-messages";
 import { EmojiEffectHandler } from "@/components/effects/emoji-effect-handler";
 import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { RedirectToSignIn } from "@clerk/nextjs";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { redirect } from "next/navigation";
 
 interface MemberIdPageProps {
@@ -23,12 +22,12 @@ const MemberIdPage = async ({
   params,
   searchParams,
 }: MemberIdPageProps) => {
-  const profile = await currentProfile();
+  const user = await currentProfile();
   const { memberId, serverId } = await params
   const { video } = await searchParams
 
-  if (!profile) {
-    return <RedirectToSignIn />;
+  if (!user) {
+    return redirect("/sign-in");
   }
 
   const currentMember = await db.member.findFirst({
@@ -59,8 +58,8 @@ const MemberIdPage = async ({
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full" >
       <EmojiEffectHandler />
       <ChatHeader
-        image={otherMember.profile.image}
-        name={otherMember.profile.name}
+        image={otherMember.user.image!!}
+        name={otherMember.user.name!!}
         serverId={serverId}
         type="conversation"
       />
@@ -75,7 +74,7 @@ const MemberIdPage = async ({
         <>
           <ChatMessages
             member={currentMember}
-            name={otherMember.profile.name}
+            name={otherMember.user.name ?? "user"}
             chatId={conversation.id}
             type="conversation"
             apiUrl="/api/direct-messages"
@@ -87,7 +86,7 @@ const MemberIdPage = async ({
             }}
           />
           <ChatInput
-            name={otherMember.profile.name}
+            name={otherMember.user.name ?? "user"}
             type="conversation"
             apiUrl="/api/socket/direct-messages"
             query={{

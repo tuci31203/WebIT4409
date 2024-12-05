@@ -53,10 +53,10 @@ export default function UserProfile() {
 
   return (
     <>
-      <p className='mb-3 text-xl font-bold'>Profile details</p>
+      <p className='mb-3 text-xl font-bold'>User details</p>
       <Separator />
       <div className='my-3 flex min-w-0 items-center justify-start gap-6'>
-        <p className='w-64'>Profile</p>
+        <p className='w-64'>User</p>
         {!isUpdate && (
           <div className='flex flex-grow items-center justify-between'>
             <div className='flex items-center gap-6'>

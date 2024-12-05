@@ -1,5 +1,5 @@
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { ConnectionStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -8,7 +8,7 @@ export async function GET(
 ) {
     try {
         const profile = await currentProfile();
-        if(!profile) {
+        if (!profile) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
         const conversations = await db.conversation1.findMany({
@@ -25,7 +25,7 @@ export async function GET(
         });
 
         const peopleChattedWith = conversations.map(conversation => {
-            if(conversation.profileOneId === profile.id) return conversation.profileTwo;
+            if (conversation.profileOneId === profile.id) return conversation.profileTwo;
             return conversation.profileOne;
         });
 
@@ -44,7 +44,7 @@ export async function GET(
         });
 
         const friends = friendConnections.map(connection => {
-            if(connection.profileOneId === profile.id) return connection.profileTwo;
+            if (connection.profileOneId === profile.id) return connection.profileTwo;
             return connection.profileOne;
         });
 
@@ -54,7 +54,7 @@ export async function GET(
 
 
         return NextResponse.json(strangers);
-    } catch(err) {
+    } catch (err) {
         console.log("[CONVERSATIONS_STRANGERS_GET]", err);
         return new NextResponse("Internal error", { status: 500 });
     }

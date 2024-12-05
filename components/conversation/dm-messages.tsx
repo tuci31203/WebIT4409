@@ -1,6 +1,6 @@
 "use client";
 
-import { Message, Profile } from "@prisma/client";
+import { Message, User } from "@prisma/client";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment, useRef, ElementRef } from "react";
@@ -12,12 +12,12 @@ import { DmWelcome } from "./dm-welcome";
 
 
 type MessageWithProfile = Message & {
-    profile: Profile
+    profile: User
 }
 
 interface DmMessagesProps {
     name: string;
-    profile: Profile;
+    profile: User;
     chatId: string;
     apiUrl: string;
     socketUrl: string;

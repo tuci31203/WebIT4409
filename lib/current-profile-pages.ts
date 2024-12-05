@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { auth } from '@/lib/auth'
 import { NextApiResponseServerIo } from '@/types'
+import db from './db'
 
 type ApiRouteType = {
   req: NextApiRequest
@@ -12,5 +13,10 @@ export async function currentProfilePages({ req, res }: ApiRouteType) {
   if (!session?.user) {
     return null
   }
-  return session?.user
+  const profile = await db.user.findUnique({
+    where: {
+      id: session.user.id
+    }
+  })
+  return profile
 }

@@ -1,5 +1,5 @@
 import ConversationSidebar from "@/components/conversation/conversation-sidebar";
-import { currentProfile } from "@/lib/current-profile"
+import { currentProfile } from "@/lib/current-user-profile"
 import { redirect } from "next/navigation"
 
 const ConversationLayout = async ({

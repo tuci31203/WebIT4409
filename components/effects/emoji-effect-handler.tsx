@@ -57,7 +57,7 @@ const EmojiExplosion: React.FC<EmojiEffectProps> = ({ emoji, isActive, onComplet
                         duration: 3,
                         ease: "easeOut"
                     }}
-                    className="absolute text-6xl"
+                    className="absolute text-6xl z-10"
                 >
                     {emoji}
                 </motion.div>

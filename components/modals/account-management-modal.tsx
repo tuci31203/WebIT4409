@@ -38,7 +38,7 @@ export default function AccountManagementModal() {
               className='inline-flex w-full gap-3 rounded-md bg-transparent px-3 py-2 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=active]:bg-muted-foreground/30 data-[state=active]:shadow-sm'
             >
               <CircleUserRound size={20} />
-              Profile
+              User
             </TabsTrigger>
             <TabsTrigger
               value='security'

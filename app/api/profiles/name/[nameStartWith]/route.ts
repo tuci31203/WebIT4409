@@ -1,21 +1,21 @@
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET (
+export async function GET(
     req: Request,
     { params }: { params: Promise<{ nameStartWith: string }> }
 ) {
     try {
         const profile = await currentProfile();
-        if(!profile) {
+        if (!profile) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
         const { nameStartWith } = await params;
-        if(!nameStartWith) {
+        if (!nameStartWith) {
             return NextResponse.json([]);
         }
-        const profiles = await db.profile.findMany({
+        const profiles = await db.user.findMany({
             where: {
                 name: {
                     startsWith: nameStartWith,
@@ -27,7 +27,7 @@ export async function GET (
         });
 
         return NextResponse.json(profiles);
-    } catch(err) {
+    } catch (err) {
         console.log("[PROFILES_NAME_GET]", err);
         return new NextResponse("Internal Error", { status: 500 });
     }

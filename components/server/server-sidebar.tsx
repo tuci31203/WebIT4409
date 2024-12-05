@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { currentProfile } from '@/lib/current-profile'
+import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 import { ServerChannel } from './server-channel'
@@ -111,7 +111,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
                 type: "member",
                 data: members?.map((member) => ({
                   id: member.id,
-                  name: member.profile.name,
+                  name: member.user.name ?? 'user',
                   icon: roleIconMap[member.role],
                 }))
               },

@@ -50,7 +50,7 @@ export default function UserSecurity() {
 
   return (
     <>
-      <p className='mb-3 text-xl font-bold'>Profile details</p>
+      <p className='mb-3 text-xl font-bold'>User details</p>
       {data?.user?.isOAuth && (
         <div className='pb-4 text-xs font-bold text-destructive'>
           You are logged in using {data?.user.provider} account. Password and 2FA settings cannot be changed.

@@ -1,5 +1,5 @@
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { ConnectionStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -8,7 +8,7 @@ export async function GET(
 ) {
     try {
         const profile = await currentProfile();
-        if(!profile) {
+        if (!profile) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
@@ -23,7 +23,7 @@ export async function GET(
             }
         });
         return NextResponse.json(connections);
-    } catch(e) {
+    } catch (e) {
         console.log("[FRIEND_REQUESTS_GET] ", e);
         return new NextResponse("Internal error", { status: 500 });
     }

@@ -3,7 +3,7 @@ import AccountManagementModal from '@/components/modals/account-management-modal
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { UserAvatar } from '@/components/user-avatar'
-import { currentProfile } from '@/lib/current-profile'
+import { currentProfile } from '@/lib/current-user-profile'
 
 export default async function UserButton() {
   const user = await currentProfile()

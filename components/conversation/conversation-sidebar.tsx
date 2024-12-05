@@ -1,14 +1,14 @@
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import ConversationHeader from "./conversation-header";
 import { ConversationSearch } from "./conversation-search";
-import { Profile } from "@prisma/client";
+import { User } from "@prisma/client";
 import ConversationSection from "./conversation-section";
 
 
 
-const ConversationSidebar = async ({ profile }: { profile: Profile }) => {
+const ConversationSidebar = async ({ profile }: { profile: User }) => {
     const conversations = await db.conversation1.findMany({
         where: {
             OR: [

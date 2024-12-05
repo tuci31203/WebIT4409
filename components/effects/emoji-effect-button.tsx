@@ -13,8 +13,8 @@ export const EmojiEffectButton = () => {
     const { socket } = useSocket();
     const FULL_SCREEN_EMOJIS = ['❤️', '🎉', '🤣', '✨', '🔥'];
     const triggerEmojiEffect = (emoji: string) => {
-        // console.log('triggerEmojiEffect', emoji);
         if (socket) {
+            console.log('triggerEmojiEffect', emoji);
             socket.emit('emoji-effect', emoji);
         }
     }

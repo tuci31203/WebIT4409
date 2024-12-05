@@ -1,5 +1,5 @@
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { redirect } from "next/navigation";
 
 
@@ -14,22 +14,22 @@ const InitialConversationPage = async () => {
 
   const conversations = await db.conversation1.findMany({
     where: {
-        OR: [
-            { profileOneId: profile.id },
-            { profileTwoId: profile.id }
-        ]
+      OR: [
+        { profileOneId: profile.id },
+        { profileTwoId: profile.id }
+      ]
     },
     orderBy: {
-        updatedAt: "desc"
+      updatedAt: "desc"
     }
   });
-  if(!conversations || conversations.length === 0) {
+  if (!conversations || conversations.length === 0) {
     return (
-        <div className="flex flex-col flex-1 justify-center items-center" >
-            <p className="text-xs text-zinc-500 dark:text-zinc-400" >
-              Create a new conversation
-            </p>
-        </div>
+      <div className="flex flex-col flex-1 justify-center items-center" >
+        <p className="text-xs text-zinc-500 dark:text-zinc-400" >
+          Create a new conversation
+        </p>
+      </div>
     )
   }
   const otherUserId = conversations[0].profileOneId === profile.id ? conversations[0].profileTwoId : conversations[0].profileOneId

@@ -1,6 +1,6 @@
 "use client";
 
-import { Profile } from "@prisma/client"
+import { User } from "@prisma/client"
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ConversationMember } from "./conversation-member";
@@ -9,7 +9,7 @@ import { useSocket } from "../providers/socket-provider";
 import { ConnectionWithProfile } from "@/types";
 
 
-const ConversationSection = ({ profile }: { profile: Profile }) => {
+const ConversationSection = ({ profile }: { profile: User }) => {
     const [isFetching, setIsFetching] = useState(true);
     const [friends, setFriends] = useState([]);
     const [otherPeople, setOtherPeople] = useState([]);
@@ -22,7 +22,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
             const res1 = await axios.get("/api/conversations/strangers");
             setFriends(res.data);
             setOtherPeople(res1.data);
-        } catch(err) {
+        } catch (err) {
             setError(true);
             console.log(err);
         } finally {
@@ -35,7 +35,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
     }, []);
 
     useEffect(() => {
-        if(!socket) return;
+        if (!socket) return;
 
         const newFriendKey = `connections:${profile.id}:newfriends`;
         const deleteKey = `connections:${profile.id}:delete`;
@@ -55,7 +55,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
         }
     }, [socket, profile]);
 
-    if(isFetching) {
+    if (isFetching) {
         return (
             <div className="h-full flex justify-center items-center">
                 <Loader2
@@ -65,7 +65,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
         )
     }
 
-    if(error) {
+    if (error) {
         return (
             <p className="h-full flex items-center justify-center py-2 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400">
                 There has been an error.
@@ -79,7 +79,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
                 <p className="text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400">
                     Friends
                 </p>
-                {friends.map((friend: Profile, index: number) => (
+                {friends.map((friend: User, index: number) => (
                     <ConversationMember
                         key={index}
                         profile={friend}
@@ -90,7 +90,7 @@ const ConversationSection = ({ profile }: { profile: Profile }) => {
                 <p className="text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400">
                     Other
                 </p>
-                {otherPeople.map((otherUser: Profile, index: number) => (
+                {otherPeople.map((otherUser: User, index: number) => (
                     <ConversationMember
                         key={index}
                         profile={otherUser}

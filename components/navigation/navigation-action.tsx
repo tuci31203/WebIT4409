@@ -5,10 +5,10 @@ import { ActionTooltip } from "../action-tooltip"
 import { useModal } from "@/hooks/use-modal-store"
 import { useRouter } from "next/navigation"
 import { Separator } from "../ui/separator"
-import { Profile } from "@prisma/client"
+import { User } from "@prisma/client"
 import { FriendRequestsTooltip } from "./friend-requests-tooltip"
 
-export const NavigationAction = ({ profile }: { profile: Profile }) => {
+export const NavigationAction = ({ profile }: { profile: User }) => {
     const { onOpen } = useModal()
     const router = useRouter();
 

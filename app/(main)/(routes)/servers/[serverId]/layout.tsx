@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import ServerSidebar from '@/components/server/server-sidebar'
-import { currentProfile } from '@/lib/current-profile'
+import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 const ServerIdLayout = async ({

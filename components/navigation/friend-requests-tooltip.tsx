@@ -4,7 +4,7 @@ import { UserRoundCheck, UserRoundPlus, X } from "lucide-react"
 import { ActionTooltip } from "../action-tooltip"
 import { useEffect, useState } from "react"
 import { useSocket } from "../providers/socket-provider";
-import { Profile } from "@prisma/client";
+import { User } from "@prisma/client";
 import axios from "axios";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
@@ -14,19 +14,35 @@ import { ConnectionWithProfile } from "@/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 
-export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
+export const FriendRequestsTooltip = ({ profile }: { profile: User }) => {
     const [open, setOpen] = useState(false);
     const [requests, setRequests] = useState<ConnectionWithProfile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [hasNewRequests, setHasNewRequests] = useState(() => {
-        const newReq = localStorage.getItem("hasNewRequests");
-        if (newReq != null) {
-            return JSON.parse(newReq);
-        } else {
-            localStorage.setItem("hasNewRequests", JSON.stringify(false));
-            return false;
+    // const [hasNewRequests, setHasNewRequests] = useState(() => {
+    //     const newReq = localStorage.getItem("hasNewRequests");
+    //     if (newReq != null) {
+    //         return JSON.parse(newReq);
+    //     } else {
+    //         localStorage.setItem("hasNewRequests", JSON.stringify(false));
+    //         return false;
+    //     }
+    // });
+    const [hasNewRequests, setHasNewRequests] = useState<boolean>(() => {
+        if (typeof window !== 'undefined') {
+            const newReq = localStorage.getItem("hasNewRequests");
+            return newReq != null ? JSON.parse(newReq) : false;
         }
+        return false;
     });
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const newReq = localStorage.getItem("hasNewRequests");
+            if (newReq != null) {
+                setHasNewRequests(JSON.parse(newReq));
+            }
+        }
+    }, []);
     const { socket } = useSocket();
     useEffect(() => {
         if (!socket) {
@@ -131,7 +147,7 @@ export const FriendRequestsTooltip = ({ profile }: { profile: Profile }) => {
                             return (
                                 <div className="flex items-center gap-x-2 mb-2" key={index}>
                                     <UserAvatar
-                                        src={connection.profileOne.image}
+                                        src={connection.profileOne.image!!}
                                         className="h-8 w-8 md:h-8 md:w-8"
                                     />
                                     <div className="flex flex-col gap-y-1">

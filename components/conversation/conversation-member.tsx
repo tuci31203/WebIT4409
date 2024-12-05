@@ -1,12 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Profile } from "@prisma/client";
+import { User } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/user-avatar";
 
 interface ConversationMemberProps {
-    profile: Profile
+    profile: User
 }
 
 

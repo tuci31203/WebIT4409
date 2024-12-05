@@ -5,19 +5,19 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { Profile } from "@prisma/client";
+import { User } from "@prisma/client";
 import { UserAvatar } from "../user-avatar";
 import axios from "axios";
 import { ScrollArea } from "../ui/scroll-area";
 
-const SearchedUser = ({ user, onClick }: { user: Profile, onClick: () => void }) => {
+const SearchedUser = ({ user, onClick }: { user: User, onClick: () => void }) => {
     return (
         <div className="flex items-center gap-x-2 cursor-pointer" onClick={onClick}>
             <UserAvatar
                 src={user.image}
                 className="h-8 w-8 md:h-8 md:w-8"
             />
-           <div className="flex flex-col gap-y-1">
+            <div className="flex flex-col gap-y-1">
                 <p className="text-xs font-semibold flex items-center gap-x-1">
                     {user.name}
                 </p>
@@ -30,14 +30,14 @@ const SearchedUser = ({ user, onClick }: { user: Profile, onClick: () => void })
 }
 
 interface ConversationSearchProps {
-    profile: Profile;
-    peopleChattedWith: Profile[];
+    profile: User;
+    peopleChattedWith: User[];
 }
 
 export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationSearchProps) => {
     const [open, setOpen] = useState(false);
-    const [peopleFound, setPeopleFound] = useState<Profile[]>([]);
-    const [conversationsFound, setConversationsFound] = useState<Profile[]>([]);
+    const [peopleFound, setPeopleFound] = useState<User[]>([]);
+    const [conversationsFound, setConversationsFound] = useState<User[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -59,28 +59,28 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
 
     const onSearch = async (event: ChangeEvent<HTMLInputElement>) => {
         const keyword = event.target.value;
-        if(!keyword) {
+        if (!keyword) {
             setConversationsFound(peopleChattedWith)
         }
         else {
             try {
                 const res = await axios.get(`/api/profiles/name/${keyword}`);
                 const people = res.data;
-                const results: Profile[] = [];
+                const results: User[] = [];
                 setConversationsFound(
-                    people.filter((user: Profile) => {
-                        if(peopleChattedWith.some(acquaintance => user.id === acquaintance.id)) return true;
+                    people.filter((user: User) => {
+                        if (peopleChattedWith.some(acquaintance => user.id === acquaintance.id)) return true;
                         else {
                             results.push(user)
                             return false;
                         }
                     }
-                ));
+                    ));
                 setPeopleFound(results)
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             }
-            
+
         }
     }
 
@@ -113,8 +113,8 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                         <DialogTitle className="text-2xl text-center font-bold">
                             Find your friends
                         </DialogTitle>
-                        <Input 
-                            placeholder="Search" 
+                        <Input
+                            placeholder="Search"
                             onChange={onSearch}
                             className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         />
@@ -132,11 +132,11 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                                 <div className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
                                     People
                                 </div>
-                                {peopleFound.map((profile: Profile, index: number) => (
-                                    <SearchedUser 
+                                {peopleFound.map((profile: User, index: number) => (
+                                    <SearchedUser
                                         user={profile}
                                         onClick={() => onUserClick(profile.id)}
-                                        key={index}  
+                                        key={index}
                                     />
                                 ))}
                             </div>
@@ -146,21 +146,21 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
                                 <div className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70 mb-3">
                                     Conversations
                                 </div>
-                                {conversationsFound.map((profile: Profile, index: number) => (
-                                    <SearchedUser 
+                                {conversationsFound.map((profile: User, index: number) => (
+                                    <SearchedUser
                                         user={profile}
                                         onClick={() => onUserClick(profile.id)}
-                                        key={index}  
+                                        key={index}
                                     />
                                 ))}
                             </div>
                         )}
                     </ScrollArea>
-                    
-                    
+
+
                 </DialogContent>
-                
-            
+
+
             </Dialog>
         </>
     )

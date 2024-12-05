@@ -10,12 +10,12 @@ import {
 import { Button } from "@/components/ui/button"
 import { NavigationSidebar } from "@/components/navigation/navigation-sidebar"
 import ConversationSidebar from "./conversation-sidebar";
-import { Profile } from "@prisma/client";
+import { User } from "@prisma/client";
 
 
 export const ConversationMobileToggle = ({
     profile
-}: { profile: Profile; }) => {
+}: { profile: User; }) => {
 
     return (
         <Sheet>

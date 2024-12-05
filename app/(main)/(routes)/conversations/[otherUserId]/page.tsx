@@ -3,32 +3,31 @@ import { DmInput } from "@/components/conversation/dm-input";
 import { DmMessages } from "@/components/conversation/dm-messages";
 import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation1";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { RedirectToSignIn } from "@clerk/nextjs";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { redirect } from "next/navigation";
 
 interface ConversationIdPageProps {
-    params: {
+    params: Promise<{
         otherUserId: string;
-    },
-    searchParams: {
+    }>,
+    searchParams: Promise<{
         video?: boolean;
-    }
+    }>
 }
 
 const ConversationIdPage = async ({
     params,
     searchParams,
 }: ConversationIdPageProps) => {
-    const profile = await currentProfile();
+    const user = await currentProfile();
     const { otherUserId } = await params
 
-    if (!profile) {
-        return <RedirectToSignIn />;
+    if (!user) {
+        return redirect("/sign-in");
     }
 
-    const conversation = await getOrCreateConversation(profile.id, otherUserId);
+    const conversation = await getOrCreateConversation(user.id!!, otherUserId);
 
     if (!conversation) {
         return redirect("/");
@@ -36,18 +35,18 @@ const ConversationIdPage = async ({
 
     const { profileOne, profileTwo } = conversation;
 
-    const otherUser = profile.id === profileOne.id ? profileTwo : profileOne;
+    const otherUser = user.id === profileOne.id ? profileTwo : profileOne;
 
     const connection = await db.connection.findFirst({
         where: {
             OR: [
                 {
-                    profileOneId: profile.id,
+                    profileOneId: user.id,
                     profileTwoId: otherUser.id
                 },
                 {
                     profileOneId: otherUser.id,
-                    profileTwoId: profile.id,
+                    profileTwoId: user.id,
                 },
             ]
         }
@@ -57,11 +56,11 @@ const ConversationIdPage = async ({
     return (
         <div className="bg-white dark:bg-[#313338] flex flex-col h-full" >
             <DmHeader
-                image={otherUser.image}
-                name={otherUser.name}
+                image={otherUser.image!!}
+                name={otherUser.name!!}
                 connection={connection}
                 otherUserId={otherUser.id}
-                profile={profile}
+                profile={user}
             />
             {(await searchParams).video && (
                 <MediaRoom
@@ -73,8 +72,8 @@ const ConversationIdPage = async ({
             {!(await searchParams).video && (
                 <>
                     <DmMessages
-                        profile={profile}
-                        name={otherUser.name}
+                        profile={user}
+                        name={otherUser.name!!}
                         chatId={conversation.id}
                         apiUrl="/api/direct-messages1"
                         paramKey="conversationId"
@@ -85,7 +84,7 @@ const ConversationIdPage = async ({
                         }}
                     />
                     <DmInput
-                        name={otherUser.name}
+                        name={otherUser.name!!}
                         apiUrl="/api/socket/direct-messages1"
                         query={{
                             conversationId: conversation.id,

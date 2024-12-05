@@ -1,6 +1,6 @@
-import { db } from "./db"
+import db from "./db"
 
-export const getOrCreateConversation = async (profileOneId: string, profileTwoId: string) => {    
+export const getOrCreateConversation = async (profileOneId: string, profileTwoId: string) => {
     let conversation = null;
     try {
         conversation = await db.conversation1.findFirst({
@@ -22,7 +22,7 @@ export const getOrCreateConversation = async (profileOneId: string, profileTwoId
             }
         });
 
-        if(!conversation) {
+        if (!conversation) {
             conversation = await db.conversation1.create({
                 data: {
                     profileOneId,
@@ -34,9 +34,9 @@ export const getOrCreateConversation = async (profileOneId: string, profileTwoId
                 }
             })
         }
-    
+
         return conversation;
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         return null;
     }

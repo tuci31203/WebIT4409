@@ -3,8 +3,8 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { EmojiEffectHandler } from "@/components/effects/emoji-effect-handler";
 import { MediaRoom } from "@/components/media-room";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-user-profile";
+import db from "@/lib/db";
 import { ChannelType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -46,6 +46,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
         serverId={channel.serverId}
         type="channel"
       />
+      <EmojiEffectHandler />
       {channel.type === ChannelType.TEXT && (
         <>
           <ChatMessages
@@ -87,7 +88,6 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
           audio={true}
         />
       )}
-      <EmojiEffectHandler />
     </div>
   );
 }
