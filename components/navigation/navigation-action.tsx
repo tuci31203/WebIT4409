@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { MessageCircle, Plus } from "lucide-react"
 import { ActionTooltip } from "../action-tooltip"

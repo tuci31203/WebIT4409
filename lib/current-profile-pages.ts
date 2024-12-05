@@ -1,17 +1,16 @@
-import { getAuth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from 'next'
 
-export const currentProfilePages = async (req: NextApiRequest) => {
-    const { userId } = await getAuth(req);
-    if (!userId) {
-        return null;
-    }
-    const profile = await db.profile.findUnique({
-        where: {
-            userId,
-        },
-    });
+import { auth } from '@/lib/auth'
+import { NextApiResponseServerIo } from '@/types'
 
-    return profile;
-};
+type ApiRouteType = {
+  req: NextApiRequest
+  res: NextApiResponseServerIo | NextApiResponse
+}
+export async function currentProfilePages({ req, res }: ApiRouteType) {
+  const session = await auth(req, res)
+  if (!session?.user) {
+    return null
+  }
+  return session?.user
+}
