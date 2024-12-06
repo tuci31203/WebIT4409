@@ -18,31 +18,16 @@ export const FriendRequestsTooltip = ({ profile }: { profile: User }) => {
     const [open, setOpen] = useState(false);
     const [requests, setRequests] = useState<ConnectionWithProfile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    // const [hasNewRequests, setHasNewRequests] = useState(() => {
-    //     const newReq = localStorage.getItem("hasNewRequests");
-    //     if (newReq != null) {
-    //         return JSON.parse(newReq);
-    //     } else {
-    //         localStorage.setItem("hasNewRequests", JSON.stringify(false));
-    //         return false;
-    //     }
-    // });
-    const [hasNewRequests, setHasNewRequests] = useState<boolean>(() => {
-        if (typeof window !== 'undefined') {
-            const newReq = localStorage.getItem("hasNewRequests");
-            return newReq != null ? JSON.parse(newReq) : false;
+    const [hasNewRequests, setHasNewRequests] = useState(() => {
+        const newReq = localStorage.getItem("hasNewRequests");
+        if (newReq != null) {
+            return JSON.parse(newReq);
+        } else {
+            localStorage.setItem("hasNewRequests", JSON.stringify(false));
+            return false;
         }
-        return false;
     });
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const newReq = localStorage.getItem("hasNewRequests");
-            if (newReq != null) {
-                setHasNewRequests(JSON.parse(newReq));
-            }
-        }
-    }, []);
     const { socket } = useSocket();
     useEffect(() => {
         if (!socket) {

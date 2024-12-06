@@ -12,7 +12,7 @@ export default async function handle(
     }
 
     try {
-        const profile = await currentProfilePages(req);
+        const profile = await currentProfilePages({ req, res });
         const { directMessageId, conversationId } = req.query;
         const { content } = req.body;
 

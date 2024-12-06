@@ -13,7 +13,7 @@ export default async function handler(
         return res.status(405).json({ error: "Method not allowed" });
     }
     try {
-        const profile = await currentProfilePages(req);
+        const profile = await currentProfilePages({ req, res });
         const { requestedProfileId } = req.body;
         if (!profile) {
             return res.status(401).json({ error: "Unauthorized" });
