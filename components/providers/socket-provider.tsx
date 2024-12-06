@@ -23,20 +23,21 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
-      path: "/api/socket/io",
+      path: '/api/socket/io',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addTrailingSlash: false,
-    });
+      addTrailingSlash: false
+    })
 
-    socketInstance.on("connect", () => {
-      setIsConnected(true);
-    });
+    socketInstance.on('connect', () => {
+      setIsConnected(true)
+    })
 
-    socketInstance.on("disconnect", () => {
-      setIsConnected(false);
-    });
+    socketInstance.on('disconnect', () => {
+      setIsConnected(false)
+    })
 
-    setSocket(socketInstance);
+    setSocket(socketInstance)
 
     return () => {
       socketInstance.disconnect()

@@ -26,80 +26,68 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        className="focus:outline-none "
-        asChild
-      >
-        <button
-          className="w-full text-md font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition "
-        >
+      <DropdownMenuTrigger className='focus:outline-none' asChild>
+        <button className='text-md flex h-12 w-full items-center border-b-2 border-neutral-200 px-3 font-semibold transition hover:bg-zinc-700/10 dark:border-neutral-800 dark:hover:bg-zinc-700/50'>
           {server.name}
-          <ChevronDown className="hidden md:flex h-5 w-5 ml-auto" />
+          <ChevronDown className='ml-auto hidden h-5 w-5 md:flex' />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]"
-      >
+      <DropdownMenuContent className='w-56 space-y-[2px] text-xs font-medium text-black dark:text-neutral-400'>
         {isModerator && (
           <DropdownMenuItem
-            onClick={() => onOpen("invite", { server })}
-            className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen('invite', { server })}
+            className='cursor-pointer px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400'
           >
             Invite People
-            <UserPlus className="h-4 w-4 ml-auto" />
+            <UserPlus className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
         {isAdmin && (
           <DropdownMenuItem
-            onClick={() => onOpen("editServer", { server })}
-            className="px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen('editServer', { server })}
+            className='cursor-pointer px-3 py-2 text-sm'
           >
             Server Setting
-            <Settings className="h-4 w-4 ml-auto" />
+            <Settings className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem
-            onClick={() => onOpen("members", { server })}
-            className="px-3 py-2 text-sm cursor-pointer"
-          >
+          <DropdownMenuItem onClick={() => onOpen('members', { server })} className='cursor-pointer px-3 py-2 text-sm'>
             Manage Members
-            <Users className="h-4 w-4 ml-auto" />
+            <Users className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
         {isModerator && (
           <DropdownMenuItem
-            onClick={() => onOpen("createChannel", { server })}
-            className="px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen('createChannel', { server })}
+            className='cursor-pointer px-3 py-2 text-sm'
           >
             Create Channel
-            <PlusCircle className="h-4 w-4 ml-auto" />
+            <PlusCircle className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
-        {isModerator && (
-          <DropdownMenuSeparator />
-        )}
+        {isModerator && <DropdownMenuSeparator />}
         {isAdmin && (
           <DropdownMenuItem
-            onClick={() => onOpen("deleteServer", { server })}
-            className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen('deleteServer', { server })}
+            className='cursor-pointer px-3 py-2 text-sm text-rose-500'
           >
             Delete Server
-            <Trash className="h-4 w-4 ml-auto" />
+            <Trash className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
         {!isAdmin && (
           <DropdownMenuItem
-            onClick={() => onOpen("leaveServer", { server })}
-            className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen('leaveServer', { server })}
+            className='cursor-pointer px-3 py-2 text-sm text-rose-500'
           >
             Leave Server
-            <LogOut className="h-4 w-4 ml-auto" />
+            <LogOut className='ml-auto h-4 w-4' />
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
 
 export default ServerHeader

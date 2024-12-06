@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
     ]
     // domains: ["uploadthing.com"],
   },
-  transpilePackages: ['next-auth'],
+  transpilePackages: ['next-auth']
   // productionBrowserSourceMaps: false,
 }
 

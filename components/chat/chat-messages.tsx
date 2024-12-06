@@ -84,38 +84,33 @@ export const ChatMessages = ({
   }
 
   return (
-    <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto" >
-      {!hasNextPage && <div className="flex-1" />}
-      {!hasNextPage && (
-        <ChatWelcome
-          type={type}
-          name={name}
-        />
-      )}
+    <div ref={chatRef} className='flex flex-1 flex-col overflow-y-auto py-4'>
+      {!hasNextPage && <div className='flex-1' />}
+      {!hasNextPage && <ChatWelcome type={type} name={name} />}
       {hasNextPage && (
-        <div className="flex justify-center" >
+        <div className='flex justify-center'>
           {isFetchingNextPage ? (
-            <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
+            <Loader2 className='my-4 h-6 w-6 animate-spin text-zinc-500' />
           ) : (
             <button
               onClick={() => fetchNextPage()}
-              className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition"
+              className='my-4 text-xs text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300'
             >
               Load preview messages
             </button>
           )}
         </div>
       )}
-      <div className="flex flex-col-reverse mt-auto" >
+      <div className='mt-auto flex flex-col-reverse'>
         {data?.pages?.map((group, i) => (
-          <Fragment key={i} >
+          <Fragment key={i}>
             {group?.items?.map((message: MessageWithMemberWithProfile) => (
               <ChatItem
                 key={message.id}
                 id={message.id}
                 currentMember={member}
                 member={message.member}
-                content={message.content || ""}
+                content={message.content || ''}
                 fileUrl={message.fileUrl}
                 deleted={message.deleted}
                 timestamp={format(new Date(message.createdAt), DATE_FORMAT)}

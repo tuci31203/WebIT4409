@@ -1,27 +1,22 @@
-import ConversationSidebar from "@/components/conversation/conversation-sidebar";
-import { currentProfile } from "@/lib/current-user-profile"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
 
-const ConversationLayout = async ({
-    children,
-}: {
-    children: React.ReactNode;
-}) => {
-    const profile = await currentProfile()
-    if (!profile) {
-        return redirect("/sign-in")
-    }
+import ConversationSidebar from '@/components/conversation/conversation-sidebar'
+import { currentProfile } from '@/lib/current-user-profile'
 
-    return (
-        <div className="h-full">
-            <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
-                <ConversationSidebar profile={profile} />
-            </div>
-            <main className="h-full md:pl-60">
-                {children}
-            </main>
-        </div>
-    );
+const ConversationLayout = async ({ children }: { children: React.ReactNode }) => {
+  const profile = await currentProfile()
+  if (!profile) {
+    return redirect('/sign-in')
+  }
+
+  return (
+    <div className='h-full'>
+      <div className='fixed inset-y-0 z-20 hidden h-full w-60 flex-col md:flex'>
+        <ConversationSidebar profile={profile} />
+      </div>
+      <main className='h-full md:pl-60'>{children}</main>
+    </div>
+  )
 }
 
-export default ConversationLayout;
+export default ConversationLayout

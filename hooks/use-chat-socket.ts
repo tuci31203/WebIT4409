@@ -1,6 +1,7 @@
-import { DirectMessage1, Member, Message, User } from "@prisma/client";
-import { useEffect } from 'react'
+import { DirectMessage1, Member, Message, User } from '@prisma/client'
 import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+
 import { useSocket } from '@/components/providers/socket-provider'
 
 type ChatSocketProps = {
@@ -9,13 +10,15 @@ type ChatSocketProps = {
   queryKey: string
 }
 
-type MessageWithMemberWithProfile = (Message & {
-  member: Member & {
-    profile: User;
-  }
-}) | (DirectMessage1 & {
-  profile: User
-})
+type MessageWithMemberWithProfile =
+  | (Message & {
+      member: Member & {
+        profile: User
+      }
+    })
+  | (DirectMessage1 & {
+      profile: User
+    })
 
 export const useChatSocket = ({ addKey, updateKey, queryKey }: ChatSocketProps) => {
   const { socket } = useSocket()

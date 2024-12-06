@@ -12,24 +12,25 @@ export const config = {
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
-    const path = "/api/socket/io";
-    const httpServer: NetServer = res.socket.server as any;
+    const path = '/api/socket/io'
+    const httpServer: NetServer = res.socket.server as any
     const io = new ServerIO(httpServer, <ServerOptions>{
       path: path,
       cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
+        origin: '*',
+        methods: ['GET', 'POST']
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addTrailingSlash: false,
-    });
-    res.socket.server.io = io;
+      addTrailingSlash: false
+    })
+    res.socket.server.io = io
 
-    io.on('connection', (socket) => {
+    io.on('connection', socket => {
       socket.on('emoji-effect', (emoji: string) => {
-        io.emit('emoji-effect', emoji);
-      });
-    });
+        io.emit('emoji-effect', emoji)
+      })
+    })
   }
 
   res.end()

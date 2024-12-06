@@ -18,12 +18,12 @@ interface ServerSearchProps {
     label: string
     type: 'channel' | 'member'
     data:
-    | {
-      icon: React.ReactNode
-      name: string
-      id: string
-    }[]
-    | undefined
+      | {
+          icon: React.ReactNode
+          name: string
+          id: string
+        }[]
+      | undefined
   }[]
 }
 
@@ -42,15 +42,15 @@ export const ServerSearch = ({ data }: ServerSearchProps) => {
 
     document.addEventListener('keydown', down)
 
-    return () => document.removeEventListener("keydown", down)
-  }, []);
+    return () => document.removeEventListener('keydown', down)
+  }, [])
 
-  const onClick = ({ id, type }: { id: string; type: "channel" | "member" }) => {
-    setOpen(false);
+  const onClick = ({ id, type }: { id: string; type: 'channel' | 'member' }) => {
+    setOpen(false)
 
-    if (type === "member") {
+    if (type === 'member') {
       return router.push(`/servers/${params?.serverId}/conversations/${id}`)
-    } else if (type === "channel") {
+    } else if (type === 'channel') {
       return router.push(`/servers/${params?.serverId}/channels/${id}`)
     }
   }

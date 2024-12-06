@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { auth } from '@/lib/auth'
 import { NextApiResponseServerIo } from '@/types'
+
 import db from './db'
 
 type ApiRouteType = {
