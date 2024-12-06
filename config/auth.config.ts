@@ -13,7 +13,12 @@ export default {
   providers: [
     Google({
       clientId: envConfig.AUTH_GOOGLE_ID,
-      clientSecret: envConfig.AUTH_GOOGLE_SECRET
+      clientSecret: envConfig.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          redirect_uri: envConfig.AUTH_TRUST_HOST + '/api/auth/callback/google'
+        }
+      }
     }),
     GitHub({
       clientId: envConfig.AUTH_GITHUB_ID,
