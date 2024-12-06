@@ -18,7 +18,9 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       path: path,
       cors: {
         origin: ['*', process.env.NEXT_PUBLIC_SITE_URL!],
-        methods: ['GET', 'POST']
+        methods: ['GET', 'POST'],
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization']
       },
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
