@@ -10,7 +10,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const confirmationURL = `${BASE_URL}/verify-email?token=${token}`
 
   await resend.emails.send({
-    from: 'DisCode <noreply@resend.dev>',
+    from: 'DisCode <noreply@tuci31203.id.vn>',
     to: email,
     subject: 'Please verify your email address',
     react: EmailTemplate({
