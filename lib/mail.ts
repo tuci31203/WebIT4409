@@ -30,7 +30,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetPasswordURL = `${BASE_URL}/reset-password?token=${token}`
 
   await resend.emails.send({
-    from: 'DisCode <noreply@resend.dev>',
+    from: 'DisCode <noreply@tuci31203.id.vn>',
     to: email,
     subject: 'Reset your password',
     react: EmailTemplate({
@@ -52,7 +52,7 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
   const user = await findUserByEmail(email)
 
   await resend.emails.send({
-    from: 'DisCode <noreply@resend.dev>',
+    from: 'DisCode <noreply@tuci31203.id.vn>',
     to: email,
     subject: 'Two-factor authentication code',
     react: EmailTemplate({
