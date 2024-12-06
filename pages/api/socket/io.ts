@@ -17,7 +17,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const io = new ServerIO(httpServer, <ServerOptions>{
       path: path,
       cors: {
-        origin: '*',
+        origin: ['*', process.env.NEXT_PUBLIC_SITE_URL!],
         methods: ['GET', 'POST']
       },
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
