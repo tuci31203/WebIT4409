@@ -14,7 +14,7 @@ import { UserAvatar } from '../user-avatar'
 const SearchedUser = ({ user, onClick }: { user: User; onClick: () => void }) => {
   return (
     <div className='flex cursor-pointer items-center gap-x-2' onClick={onClick}>
-      <UserAvatar src={user.image} className='h-8 w-8 md:h-8 md:w-8' />
+      <UserAvatar src={user.image!} className='h-8 w-8 md:h-8 md:w-8' />
       <div className='flex flex-col gap-y-1'>
         <p className='flex items-center gap-x-1 text-xs font-semibold'>{user.name}</p>
         <p className='text-xs text-zinc-500'>{user.email}</p>

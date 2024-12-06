@@ -1,5 +1,3 @@
-import { Hash } from 'lucide-react'
-
 interface DmWelcomeProps {
   name: string
 }
