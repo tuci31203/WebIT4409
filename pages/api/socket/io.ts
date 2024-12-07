@@ -16,8 +16,9 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const httpServer: NetServer = res.socket.server as any
     const io = new ServerIO(httpServer, <ServerOptions>{
       path: path,
+      transports: ['websocket', 'polling'],
       cors: {
-        origin: ['*', process.env.NEXT_PUBLIC_SITE_URL!],
+        origin: [process.env.NEXT_PUBLIC_SITE_URL!, '*'],
         methods: ['GET', 'POST'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization']
