@@ -22,12 +22,7 @@ export default {
     }),
     GitHub({
       clientId: envConfig.AUTH_GITHUB_ID,
-      clientSecret: envConfig.AUTH_GITHUB_SECRET,
-      authorization: {
-        params: {
-          redirect_uri: envConfig.AUTH_TRUST_HOST + '/api/auth/callback/github'
-        }
-      }
+      clientSecret: envConfig.AUTH_GITHUB_SECRET
     }),
     Credentials({
       authorize: async credentials => {
