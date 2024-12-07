@@ -10,7 +10,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const confirmationURL = `${BASE_URL}/verify-email?token=${token}`
 
   await resend.emails.send({
-    from: 'DisCode <noreply@tuci31203.id.vn>',
+    from: 'DisCode <noreply@discode.io.vn>',
     to: email,
     subject: 'Please verify your email address',
     react: EmailTemplate({
@@ -30,7 +30,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetPasswordURL = `${BASE_URL}/reset-password?token=${token}`
 
   await resend.emails.send({
-    from: 'DisCode <noreply@tuci31203.id.vn>',
+    from: 'DisCode <noreply@discode.io.vn>',
     to: email,
     subject: 'Reset your password',
     react: EmailTemplate({
@@ -52,7 +52,7 @@ export const sendTwoFactorEmail = async (email: string, token: string) => {
   const user = await findUserByEmail(email)
 
   await resend.emails.send({
-    from: 'DisCode <noreply@tuci31203.id.vn>',
+    from: 'DisCode <noreply@discode.io.vn>',
     to: email,
     subject: 'Two-factor authentication code',
     react: EmailTemplate({
