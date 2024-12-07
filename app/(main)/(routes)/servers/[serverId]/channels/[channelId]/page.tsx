@@ -10,10 +10,10 @@ import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 interface ChannelIdPageProps {
-  params: {
+  params: Promise<{
     serverId: string
     channelId: string
-  }
+  }>
 }
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
