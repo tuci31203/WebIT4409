@@ -24,7 +24,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
       path: '/api/socket/io',
-      transports: ['websocket'],
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       addTrailingSlash: false
