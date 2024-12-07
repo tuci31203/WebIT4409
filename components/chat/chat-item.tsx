@@ -110,7 +110,8 @@ export const ChatItem = ({
     form.reset({
       content: content
     })
-  }, [content, form])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content])
 
   // const fileType = fileUrl ? isPDF();
   let realUrl = fileUrl
