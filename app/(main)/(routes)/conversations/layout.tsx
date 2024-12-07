@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import ConversationSidebar from '@/components/conversation/conversation-sidebar'
+import { EmojiEffectHandler } from '@/components/effects/emoji-effect-handler'
 import { currentProfile } from '@/lib/current-user-profile'
 
 const ConversationLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -15,6 +16,7 @@ const ConversationLayout = async ({ children }: { children: React.ReactNode }) =
         <ConversationSidebar profile={profile} />
       </div>
       <main className='h-full md:pl-60'>{children}</main>
+      <EmojiEffectHandler />
     </div>
   )
 }
