@@ -4,9 +4,9 @@ import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 interface ServerIdPageProps {
-  params: Promise<{
+  params: {
     serverId: string
-  }>
+  }
 }
 
 const ServerIdPage = async ({ params }: ServerIdPageProps) => {

@@ -4,13 +4,7 @@ import ServerSidebar from '@/components/server/server-sidebar'
 import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
-const ServerIdLayout = async ({
-  children,
-  params
-}: {
-  children: React.ReactNode
-  params: Promise<{ serverId: string }>
-}) => {
+const ServerIdLayout = async ({ children, params }: { children: React.ReactNode; params: { serverId: string } }) => {
   const user = await currentProfile()
   const { serverId } = await params
   if (!user) {

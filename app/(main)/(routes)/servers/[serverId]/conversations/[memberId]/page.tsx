@@ -10,13 +10,13 @@ import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 interface MemberIdPageProps {
-  params: Promise<{
+  params: {
     memberId: string
     serverId: string
-  }>
-  searchParams: Promise<{
+  }
+  searchParams: {
     video?: boolean
-  }>
+  }
 }
 
 const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {

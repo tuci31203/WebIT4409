@@ -66,7 +66,7 @@ export const ChatItem = ({
       return
     }
 
-    router.push(`/${member.user.id}`)
+    router.push(`/conversations/${member.user.id}`)
   }
 
   useEffect(() => {

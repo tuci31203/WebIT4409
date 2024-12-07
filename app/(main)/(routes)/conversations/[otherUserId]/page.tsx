@@ -9,12 +9,12 @@ import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
 
 interface ConversationIdPageProps {
-  params: Promise<{
+  params: {
     otherUserId: string
-  }>
-  searchParams: Promise<{
+  }
+  searchParams: {
     video?: boolean
-  }>
+  }
 }
 
 const ConversationIdPage = async ({ params, searchParams }: ConversationIdPageProps) => {

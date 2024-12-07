@@ -4,9 +4,9 @@ import { currentProfile } from '@/lib/current-profile'
 import db from '@/lib/db'
 
 interface InviteCodePageProps {
-  params: Promise<{
+  params: {
     inviteCode: string
-  }>
+  }
 }
 
 const InviteCodePage = async ({ params }: InviteCodePageProps) => {
