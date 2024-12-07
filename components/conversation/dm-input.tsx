@@ -66,7 +66,7 @@ export const DmInput = ({ apiUrl, query, name }: DmInputProps) => {
                   <button
                     type='button'
                     onClick={() => onOpen('messageFile', { apiUrl, query })}
-                    className='absolute left-8 top-7 z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-zinc-500 p-1 transition hover:bg-zinc-600 dark:bg-zinc-400 dark:hover:bg-zinc-300'
+                    className='absolute left-8 top-7 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-zinc-500 p-1 transition hover:bg-zinc-600 dark:bg-zinc-400 dark:hover:bg-zinc-300'
                   >
                     <Plus className='text-white dark:text-[#313338]' />
                   </button>

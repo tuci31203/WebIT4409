@@ -30,7 +30,7 @@ export default function AccountManagementModal() {
         <Tabs orientation='vertical' className='p-0'>
           <TabsList className='h-full w-64 p-3'>
             <DialogHeader className='pb-4'>
-              <DialogTitle className='text-xl font-bold text-black'>Account Settings</DialogTitle>
+              <DialogTitle className='text-xl font-bold text-black dark:text-zinc-200'>Account Settings</DialogTitle>
               <DialogDescription>Manage your account info.</DialogDescription>
             </DialogHeader>
             <TabsTrigger
@@ -49,10 +49,10 @@ export default function AccountManagementModal() {
             </TabsTrigger>
           </TabsList>
           <ScrollArea className='h-[490px] w-full'>
-            <TabsContent value='profile' className='w-full px-10 py-3 text-sm text-black'>
+            <TabsContent value='profile' className='w-full px-10 py-3 text-sm text-black dark:text-zinc-200'>
               <UserProfile />
             </TabsContent>
-            <TabsContent value='security' className='w-full px-10 py-3 text-black'>
+            <TabsContent value='security' className='w-full px-10 py-3 text-black dark:text-zinc-200'>
               <UserSecurity />
             </TabsContent>
           </ScrollArea>

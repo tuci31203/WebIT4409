@@ -13,7 +13,7 @@ export default function ButtonSignOut() {
   }
   return (
     <Button
-      className='h-auto w-full justify-start bg-transparent p-2 px-2 font-normal text-destructive hover:bg-destructive/15 focus-visible:ring-0 focus-visible:ring-offset-0'
+      className='h-auto w-full justify-start bg-transparent p-2 px-2 font-normal text-destructive hover:bg-destructive/15 focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-red-400'
       onClick={handleSignOut}
     >
       <LogOut size={17} />
