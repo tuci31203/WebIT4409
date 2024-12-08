@@ -2,7 +2,7 @@
 
 import { User } from '@prisma/client'
 import axios from 'axios'
-import { Search } from 'lucide-react'
+import { Loader2, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useEffect, useState } from 'react'
 
@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { ScrollArea } from '../ui/scroll-area'
 import { UserAvatar } from '../user-avatar'
+import { cn } from '@/lib/utils'
 
 const SearchedUser = ({ user, onClick }: { user: User; onClick: () => void }) => {
   return (
@@ -23,15 +24,12 @@ const SearchedUser = ({ user, onClick }: { user: User; onClick: () => void }) =>
   )
 }
 
-interface ConversationSearchProps {
-  profile: User
-  peopleChattedWith: User[]
-}
-
-export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationSearchProps) => {
+export const ConversationSearch = ({ profile }: { profile: User }) => {
   const [open, setOpen] = useState(false)
+  const [peopleChattedWith, setPeopleChattedWith] = useState<User[]>([]);
   const [peopleFound, setPeopleFound] = useState<User[]>([])
   const [conversationsFound, setConversationsFound] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter()
 
   useEffect(() => {
@@ -47,22 +45,34 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
     return () => document.removeEventListener('keydown', down)
   }, [])
 
-  useEffect(() => {
-    setConversationsFound(peopleChattedWith)
-  }, [peopleChattedWith])
+  const onOpenDialog = async () => {
+    try {
+      const res = await axios.get('/api/conversations/partners');
+      setPeopleChattedWith(res.data);
+      setConversationsFound(res.data);
+    } catch(err) {
+      console.log(err);
+    } finally {
+      setOpen(true);
+    }
+  }
 
   const onSearch = async (event: ChangeEvent<HTMLInputElement>) => {
     const keyword = event.target.value
     if (!keyword) {
-      setConversationsFound(peopleChattedWith)
+      setConversationsFound(peopleChattedWith);
+      setPeopleFound([]);
     } else {
       try {
-        const res = await axios.get(`/api/profiles/name/${keyword}`)
+        setIsLoading(true);
+        const res1 = await axios.get('/api/conversations/partners');
+        setPeopleChattedWith(res1.data);
+        const res = await axios.get(`/api/users/search/${keyword}`)
         const people = res.data
         const results: User[] = []
         setConversationsFound(
           people.filter((user: User) => {
-            if (peopleChattedWith.some(acquaintance => user.id === acquaintance.id)) return true
+            if (peopleChattedWith.some((acquaintance: User) => user.id === acquaintance.id)) return true
             else {
               results.push(user)
               return false
@@ -72,6 +82,8 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
         setPeopleFound(results)
       } catch (err) {
         console.log(err)
+      } finally {
+        setIsLoading(false);
       }
     }
   }
@@ -84,7 +96,8 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        disabled={isLoading}
+        onClick={onOpenDialog}
         className='group flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50'
       >
         <Search className='h-4 w-4 text-zinc-500 dark:text-zinc-400' />
@@ -95,33 +108,43 @@ export const ConversationSearch = ({ profile, peopleChattedWith }: ConversationS
           <span className='text-xs'>⌘</span>K
         </kbd>
       </button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog 
+        open={open} 
+        onOpenChange={() => {
+          if(open == true) {
+            setConversationsFound([])
+            setPeopleFound([]);
+          }
+          setOpen(!open);
+        }}
+      >
         <DialogContent className='overflow-hidden bg-white p-0 text-black'>
           <DialogHeader className='px-6 pt-8'>
             <DialogTitle className='text-center text-2xl font-bold'>Find your friends</DialogTitle>
             <Input
-              placeholder='Search'
+              placeholder='Search by name or email'
               onChange={onSearch}
               className='border-0 bg-zinc-300/50 text-black focus-visible:ring-0 focus-visible:ring-offset-0'
             />
           </DialogHeader>
           <ScrollArea className='mb-6 max-h-[420px] px-6'>
-            {peopleFound.length === 0 && conversationsFound.length === 0 && (
+            {isLoading && <Loader2 className='mx-auto h-6 w-6 animate-spin text-zinc-500' />}
+            {(!isLoading && peopleFound.length === 0 && conversationsFound.length === 0) && (
               <div className='flex flex-1 flex-col items-center justify-center'>
                 <p className='text-xs text-zinc-500 dark:text-zinc-400'>No users found</p>
               </div>
             )}
-            {peopleFound.length > 0 && (
-              <div className='mb-6'>
+            {!isLoading && peopleFound.length > 0 && (
+              <div className={cn("flex flex-col gap-2", conversationsFound.length > 0 && "mb-6")}>
                 <div className='text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70'>People</div>
                 {peopleFound.map((profile: User, index: number) => (
                   <SearchedUser user={profile} onClick={() => onUserClick(profile.id)} key={index} />
                 ))}
               </div>
             )}
-            {conversationsFound.length > 0 && (
-              <div>
-                <div className='mb-3 text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70'>
+            {!isLoading && conversationsFound.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <div className='text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70'>
                   Conversations
                 </div>
                 {conversationsFound.map((profile: User, index: number) => (

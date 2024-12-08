@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { currentProfile } from '@/lib/current-user-profile'
 import db from '@/lib/db'
+import { ServerCrash } from 'lucide-react'
 
 const InitialConversationPage = async () => {
   const profile = await currentProfile()
@@ -21,8 +22,9 @@ const InitialConversationPage = async () => {
   })
   if (!conversations || conversations.length === 0) {
     return (
-      <div className='flex flex-1 flex-col items-center justify-center'>
-        <p className='text-xs text-zinc-500 dark:text-zinc-400'>Create a new conversation</p>
+      <div className='w-full h-full flex flex-col items-center justify-center'>
+        <ServerCrash className='my-4 h-7 w-7 text-zinc-500' />
+        <p className='text-sm text-zinc-500 dark:text-zinc-400'>Create a new conversation</p>
       </div>
     )
   }
