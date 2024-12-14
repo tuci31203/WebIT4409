@@ -5,15 +5,21 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+// Add color prop to the Avatar component
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', className)}
-    {...props}
-  />
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & { indicatorColor?: boolean }
+>(({ className, indicatorColor = true, ...props }, ref) => (
+  <div className='relative'>
+    <AvatarPrimitive.Root
+      ref={ref}
+      className={cn('relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full', className)}
+      {...props}
+    />
+    <span
+      className={cn('absolute bottom-0 right-0 h-3 w-3 rounded-full', indicatorColor ? 'bg-green-500' : 'bg-gray-500')}
+    />
+  </div>
 ))
 Avatar.displayName = AvatarPrimitive.Root.displayName
 

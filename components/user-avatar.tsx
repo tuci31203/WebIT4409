@@ -5,6 +5,7 @@ interface UserAvatarProps {
   src?: string
   name?: string
   className?: string
+  isOnline?: boolean
 }
 
 const COLORS = [
@@ -29,7 +30,7 @@ const getColorFromName = (name: string) => {
   return COLORS[index]
 }
 
-export const UserAvatar = ({ src, name, className }: UserAvatarProps) => {
+export const UserAvatar = ({ src, name, className, isOnline }: UserAvatarProps) => {
   const initial = name
     ?.split(' ')
     .map((n: string) => n[0])
@@ -38,7 +39,7 @@ export const UserAvatar = ({ src, name, className }: UserAvatarProps) => {
   const avatarColor = getColorFromName(name as string)
 
   return (
-    <Avatar className={cn('h-7 w-7 md:h-10 md:w-10', className)} role='button'>
+    <Avatar className={cn('h-7 w-7 md:h-10 md:w-10', className)} role='button' indicatorColor={isOnline}>
       <AvatarImage src={src} alt={name} className='rounded-full border border-gray-300' />
       <AvatarFallback className={cn(avatarColor, 'text-xs font-bold md:text-sm')}>{initial}</AvatarFallback>
     </Avatar>

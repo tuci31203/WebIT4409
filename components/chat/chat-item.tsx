@@ -19,11 +19,16 @@ import { UserAvatar } from '@/components/user-avatar'
 import { useModal } from '@/hooks/use-modal-store'
 import { cn } from '@/lib/utils'
 
+// Định nghĩa interface UserWithOnlineStatus
+interface UserWithOnlineStatus extends User {
+  isOnline: boolean;
+}
+
 interface ChatItemProps {
   id: string
   content: string
   member: Member & {
-    user: User
+    user: UserWithOnlineStatus;  // Sử dụng UserWithOnlineStatus ở đây
   }
   timestamp: string
   fileUrl: string | null
@@ -111,7 +116,7 @@ export const ChatItem = ({
       content: content
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content])
+  }, [content, member?.user?.isOnline])
 
   // const fileType = fileUrl ? isPDF();
   let realUrl = fileUrl
@@ -131,7 +136,9 @@ export const ChatItem = ({
     <div className='group relative flex w-full items-center p-4 transition hover:bg-black/5'>
       <div className='group flex w-full items-start gap-x-2'>
         <div onClick={onMemberClick} className='cursor-pointer transition hover:drop-shadow-md'>
-          <UserAvatar src={member?.user?.image as string} name={member?.user?.name as string} />
+          <UserAvatar src={member?.user?.image as string} name={member?.user?.name as string}
+            isOnline={member?.user?.isOnline as boolean}
+          />
         </div>
         <div className='flex w-full flex-col'>
           <div className='flex items-center gap-x-2'>

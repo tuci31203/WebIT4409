@@ -118,7 +118,9 @@ export const FriendRequestsTooltip = ({ profile }: { profile: User }) => {
             {requests.map((connection, index) => {
               return (
                 <div className='mb-2 flex items-center gap-x-2' key={index}>
-                  <UserAvatar src={connection.profileOne.image!} className='h-8 w-8 md:h-8 md:w-8' />
+                  <UserAvatar src={connection.profileOne.image!} className='h-8 w-8 md:h-8 md:w-8'
+                    isOnline={connection.profileOne.isOnline}
+                  />
                   <div className='flex flex-col gap-y-1'>
                     <p className='flex items-center gap-x-1 text-xs font-semibold'>{connection.profileOne.name}</p>
                     <p className='text-xs text-zinc-500'>{connection.profileOne.email}</p>

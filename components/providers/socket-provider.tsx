@@ -18,11 +18,11 @@ export const useSocket = () => {
 }
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const [socket, setSocket] = useState(null)
+  const [socket, setSocket] = useState<any>(null)
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
+    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {
       path: '/api/socket/io',
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -30,11 +30,19 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     })
 
     socketInstance.on('connect', () => {
+      console.log('Connected to socket server')
       setIsConnected(true)
     })
 
     socketInstance.on('disconnect', () => {
+      console.log('Disconnected from socket server')
       setIsConnected(false)
+    })
+
+    socketInstance.on('onlineStatus', (userId: string, status: boolean) => {
+      // Handle the online status update here
+      console.log('123')
+      console.log(`User ${userId} is ${status ? 'online' : 'offline'}`)
     })
 
     setSocket(socketInstance)

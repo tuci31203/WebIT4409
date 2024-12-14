@@ -11,6 +11,7 @@ interface ChatHeaderProps {
   name: string
   type: 'channel' | 'conversation'
   image?: string
+  isOnline?: boolean
 }
 
 export const ChatHeader = ({ serverId, name, type, image }: ChatHeaderProps) => {

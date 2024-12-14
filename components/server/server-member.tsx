@@ -4,6 +4,7 @@ import { Member, MemberRole, Server, User } from '@prisma/client'
 import { ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
+import { useSocket } from '@/components/providers/socket-provider'
 import { UserAvatar } from '@/components/user-avatar'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +22,7 @@ const roleIconMap = {
 export const ServerMember = ({ member, server }: ServerMemberProps) => {
   const params = useParams()
   const router = useRouter()
+  const { socket } = useSocket()
 
   const icon = roleIconMap[member.role]
 
@@ -36,16 +38,21 @@ export const ServerMember = ({ member, server }: ServerMemberProps) => {
         params?.memberId === member.id && 'bg-zinc-700/20 dark:bg-zinc-700'
       )}
     >
-      <UserAvatar src={member?.user?.image ?? undefined} name={member?.user?.name as string} className='h-8 w-8' />
-      <p
-        className={cn(
-          'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
-          params?.memberId === member.id && 'text-primary dark:text-zinc-200 dark:group-hover:text-white'
-        )}
-      >
-        {member?.user?.name}
-      </p>
+      <UserAvatar src={member?.user?.image ?? undefined} name={member?.user?.name as string} className='h-8 w-8'
+        isOnline={member?.user?.isOnline}
+      />
+      <div className='relative'>
+        <p
+          className={cn(
+            'text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300',
+            params?.memberId === member.id && 'text-primary dark:text-zinc-200 dark:group-hover:text-white'
+          )}
+        >
+          {member?.user?.name}
+        </p>
+        <span className={cn('absolute right-0 top-0 h-2 w-2 rounded-full')} />
+      </div>
       {icon}
-    </button>
+    </button >
   )
 }
