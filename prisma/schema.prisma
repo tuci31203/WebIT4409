@@ -1,3 +1,5 @@
+// npx prisma generate >> npx prisma db push
+
 generator client {
   provider = "prisma-client-js"
 }
