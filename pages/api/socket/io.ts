@@ -2,7 +2,7 @@ import { Server as NetServer } from 'http'
 import { NextApiRequest } from 'next'
 import { Server as ServerIO, ServerOptions } from 'socket.io'
 
-import db from '@/lib/db'; // Import the database instance
+import db from '@/lib/db' // Import the database instance
 import { NextApiResponseServerIo } from '@/types'
 
 export const config = {
@@ -31,15 +31,12 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
 
     io.on('connection', async socket => {
       const userId = socket.handshake.query.userId as string
-      console.log(userId)
-      // Update user status to online
       await db.user.update({
         where: { id: userId },
         data: { isOnline: true }
       })
 
       socket.on('disconnect', async () => {
-        // Update user status to offline and set last online time
         await db.user.update({
           where: { id: userId },
           data: { isOnline: false }

@@ -30,18 +30,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     })
 
     socketInstance.on('connect', () => {
-      console.log('Connected to socket server')
       setIsConnected(true)
     })
 
     socketInstance.on('disconnect', () => {
-      console.log('Disconnected from socket server')
       setIsConnected(false)
     })
 
     socketInstance.on('onlineStatus', (userId: string, status: boolean) => {
       // Handle the online status update here
-      console.log('123')
       console.log(`User ${userId} is ${status ? 'online' : 'offline'}`)
     })
 

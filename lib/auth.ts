@@ -33,13 +33,13 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         }
       })
     },
-    async signOut({ token }) {
-      if (token?.sub) {
+    async signOut(event) {
+      if ('token' in event && event.token?.sub) {
         await db.user.update({
-          where: { id: token.sub },
+          where: { id: event.token.sub },
           data: { isOnline: false }
         })
-        socket.emit('userOffline', token.sub)
+        socket.emit('userOffline', event.token.sub)
       }
     }
   },
@@ -68,7 +68,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           userId: user.id,
           status: true
         })
-        console.log('User signed in:', user)
       } catch (error) {
         console.error('Error updating user online status:', error)
         return false

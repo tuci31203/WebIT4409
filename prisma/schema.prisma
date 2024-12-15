@@ -17,7 +17,7 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   TwoFactorConfirmation TwoFactorConfirmation?
-  isOnline              Boolean                @default(false) // New field to track online status
+  isOnline              Boolean                @default(false)
 
   servers Server[]
   members Member[]
@@ -31,7 +31,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@index([isOnline]) // Index for optimizing queries based on online status
+  @@index([isOnline])
 }
 
 model Account {
